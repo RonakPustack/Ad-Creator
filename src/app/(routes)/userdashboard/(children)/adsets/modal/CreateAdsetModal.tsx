@@ -52,7 +52,7 @@ const CreateAdsetModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessTok
     }
 
     const handleSubmit = async () => {
-        setLoadingState(true)
+        console.log(campaignId)
 
         try {
             const { adAccountId, getAdAccountIdError } = await metaMarketingApi.getAdAccountId(accessToken)
@@ -68,6 +68,8 @@ const CreateAdsetModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessTok
                 optimization_goal: optimizationGoal,
                 status: status,
             }
+
+            console.log(campaignId)
 
             const response = await metaMarketingApi.createAdSet(adset, campaignId, adAccountId, accessToken);
             setLoadingState(false)

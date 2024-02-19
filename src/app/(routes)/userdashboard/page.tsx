@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import Link from "next/link";
 import Image from 'next/image';
 import { MdEdit, MdDelete } from "react-icons/md";
 import {
@@ -40,10 +41,12 @@ type Props = {
 // User Token: EAAKIiDG1r2wBO8THfdFv2Ppu9wZB3Vi3tD63eowZAdWyFju5QaoUFYVD1QcI1m9i67qSW9Ezabd9lmatFICmXb3PF0N1MaRQI4pG4HmVrzxVYxizaXjEDrgzFufMkbRlcXaAW6GxRATiP3cQmcmELvj0Pg8TYnqjGghJXnykbC6TIHZBKXYQyZCRkReZAbWFQiRHfI0DJk6P0ktNd9g2O2cImxAjUbGgHdYSsWqVL4sfy2JqfZCwJXSDZBctZAb73vO5sAZDZD
 // Marketing Auth
 export default function UserDashboard({ user }: Props) {
-    
+
     return <>
-        <h1 className="text-white">{user ? `User ID: ${user!.email}` : "Undefined"}</h1>
-        <h1 className="text-white">{user ? `User Token: ${user!.image}` : "Undefined"}</h1>
+        <center>
+            <h1 className="text-white text-3xl mb-12">{user ? `Welcome ${user!.name}` : "Undefined"}</h1>
+            <Link href="/userdashboard/campaign" className="text-white p-5 bg-slate-800 rounded-lg">Access Dashboard</Link>
+        </center>
     </>
     // const campaignData = [
     //     {

@@ -59,12 +59,12 @@ const createAdSet = async (adset: any, campaignId: any, accountId: any, accessTo
         const url = `https://graph.facebook.com/v19.0/act_${accountId}/adsets`;
 
         const response = await axios.post(url, {
+            "campaign_id": campaignId,
             "name": adset.name,
             "daily_budget": adset.daily_budget,
             "bid_amount": adset.bid_amount,
             "billing_event": adset.billing_event,
             "optimization_goal": adset.optimization_goal,
-            "campaign_id": campaignId,
             "promoted_object": {
                 "application_id": "645064660474863",
                 "object_store_url": "http://www.facebook.com/gaming/play/645064660474863/"

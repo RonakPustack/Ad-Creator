@@ -38,18 +38,18 @@ export default function TabBar({ accessToken }: { accessToken: string }) {
                         {tabState.isCampaignTabSelected ? <button className="justify-center items-center text-center text-white bg-blue-600 aspect-square h-[35px] rounded-lg" onClick={openDialog}>+</button> : <></>}
                     </div>
                 </Link>
-                {tabState.isCampaignTabSelected ? <CreateCampaignModal isOpen={isOpen} onClose={closeDialog} accessToken={accessToken} /> : tabState.isAdSetTabSelected ? <CreateAdsetModal isOpen={isOpen} onClose={closeDialog} accessToken={accessToken} campaignId={params.campainId} /> : <CreateAdsModal isOpen={isOpen} onClose={closeDialog} accessToken={accessToken} adSetId={params.adSetId} />}
+                {tabState.isCampaignTabSelected ? <CreateCampaignModal isOpen={isOpen} onClose={closeDialog} accessToken={accessToken} /> : tabState.isAdSetTabSelected ? <CreateAdsetModal isOpen={isOpen} onClose={closeDialog} accessToken={accessToken} campaignId={params.campaignId} /> : <CreateAdsModal isOpen={isOpen} onClose={closeDialog} accessToken={accessToken} adSetId={params.adSetId} />}
 
-                <Link href="/userdashboard/adsets" className={`flex grow rounded-t-lg px-4 py-3 ${tabState.isAdSetTabSelected ? 'scale-100 bg-white' : 'scale-90 bg-slate-200'}`}>
+                <Link href="" className={`flex grow rounded-t-lg px-4 py-3 ${tabState.isAdSetTabSelected ? 'scale-100 bg-white' : 'scale-90 bg-slate-200'}`}>
                     <div className={`flex grow justify-between`}>
                         <div className={`${tabState.isAdSetTabSelected ? 'text-blue-600' : 'text-black-600'}`}>Adsets</div>
-                        {tabState.isAdSetTabSelected && (params.campainId || params.adSetId) ? <div className="justify-center items-center text-center text-white bg-blue-600 aspect-square h-[35px] rounded-lg" onClick={openDialog}>+</div> : <></>}
+                        {tabState.isAdSetTabSelected && (params.campaignId || params.adSetId) ? <div className="justify-center items-center text-center text-white bg-blue-600 aspect-square h-[35px] rounded-lg" onClick={openDialog}>+</div> : <></>}
                     </div>
                 </Link>
-                <Link href="/userdashboard/ads" className={`mr-10 flex grow rounded-t-lg px-4 py-3 ${tabState.isAdTabSelected ? 'scale-100 bg-white' : 'scale-90 bg-slate-200'}`}>
+                <Link href="" className={`mr-10 flex grow rounded-t-lg px-4 py-3 ${tabState.isAdTabSelected ? 'scale-100 bg-white' : 'scale-90 bg-slate-200'}`}>
                     <div className={`flex grow justify-between`}>
                         <div className={`${tabState.isAdTabSelected ? 'text-blue-600' : 'text-black-600'}`}>Ads</div>
-                        {tabState.isAdTabSelected && (params.campainId || params.adSetId) ? <div className="justify-center items-center text-center text-white bg-blue-600 aspect-square h-[35px] rounded-lg" onClick={openDialog}>+</div> : <></>}
+                        {tabState.isAdTabSelected && (params.campaignId || params.adSetId) ? <div className="justify-center items-center text-center text-white bg-blue-600 aspect-square h-[35px] rounded-lg" onClick={openDialog}>+</div> : <></>}
                     </div>
                 </Link>
             </div>
