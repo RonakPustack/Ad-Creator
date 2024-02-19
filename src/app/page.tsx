@@ -5,6 +5,7 @@ import SessionPage from "./components/SessionPage"
 import Navbar from "./components/Navbar"
 import SignIn from "./components/signin/SignIn"
 import UserDashboard from "./(routes)/userdashboard/page"
+import UserDashboardLayout from "./(routes)/userdashboard/layout"
 
 export default async function Home() {
   const session = await getServerSession(options)
@@ -12,7 +13,7 @@ export default async function Home() {
   return (
     <>
       {session ? (
-        <UserDashboard user={session?.user} />
+        <UserDashboard user={session?.user}/>
       ) : (
         <SignIn />
       )}

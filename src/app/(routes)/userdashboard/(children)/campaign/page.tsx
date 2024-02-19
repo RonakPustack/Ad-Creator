@@ -54,7 +54,7 @@ const Campaign = () => {
                     {campaignData.map((item, index) => (
                         <TableRow key={item.id}>
                             <TableCell><SwitchComponent checked={item.status == "ACTIVE"} onChange={() => { }} /></TableCell>
-                            <TableCell><Link href={'/userdashboard/adsets'} className='underline text-blue-600'>{item.id}</Link></TableCell>
+                            <TableCell><Link href={`/userdashboard/adsets/${item.id}`} className='underline text-blue-600'>{item.id}</Link></TableCell>
                             <TableCell>{item.name}</TableCell>
                             <TableCell>{item.objective}</TableCell>
                             <TableCell>

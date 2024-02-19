@@ -110,7 +110,6 @@ const AdSetName: React.FC<any> = ({ adset, onChange: onAdsetUpdate }: Props) => 
                     <p className='font-bold text-xs'> {adset?.status}</p>
                 </div>
             </div>
-
         </div>
     );
 };

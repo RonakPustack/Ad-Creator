@@ -163,7 +163,6 @@ const createAdCreative = async (adCreative: any, imageHash: any, accountId: any,
 }
 
 const createAd = async (ad: any, adSetId: any, creativeId: any, accountId: any, accessToken: any) => {
-    console.log(`AdSet: ${adSetId}, creativeId: ${creativeId}`)
     try {
         const url = `https://graph.facebook.com/v19.0/act_${accountId}/ads`
 
@@ -171,7 +170,7 @@ const createAd = async (ad: any, adSetId: any, creativeId: any, accountId: any, 
             name: ad.name,
             adset_id: adSetId,
             creative: `{creative_id: ${creativeId}}`,
-            status: "ACTIVE",
+            status: ad.status,
             access_token: accessToken
         });
 
@@ -247,7 +246,13 @@ const testMetaMarketing = async (
 
 const combinedExports = {
     testMetaMarketing,
-    getAllCampaigns
+    getAllCampaigns,
+    getAdAccountId,
+    createCampaign,
+    createAdSet,
+    uploadImage,
+    createAdCreative,
+    createAd,
 };
 
 export default combinedExports;

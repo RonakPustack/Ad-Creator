@@ -17,13 +17,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <Head>
-        <script
-          // you might need to get a newer version
-          src="https://kit.fontawesome.com/fbadad80a0.js"
-          crossOrigin="anonymous"
-        ></script>
-      </Head>
       <body className="">
         {/* <body className={inter.className}> */}
         <AuthProvider>

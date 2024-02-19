@@ -1,23 +1,25 @@
-// DialogBox.tsx
-
 import SwitchComponent from '@/app/components/helper/SwitchComponent';
 import React, { useState } from 'react';
 import ActionButton from '../../../components/ActionButton';
 import Dialog from '../../../components/Dialog';
+import metaMarketingApi from "../../../../../api/meta_marketing_api";
 
 interface DialogBoxProps {
     isOpen: boolean;
     onClose: () => void;
+    accessToken: string;
 }
 
-const CreateCampaignModal: React.FC<DialogBoxProps> = ({ isOpen, onClose }) => {
+const CreateCampaignModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken }) => {
     const [name, updateName] = useState("");
     const [objective, updateObjective] = useState("OUTCOME_AWARENESS");
     const [status, updateStatus] = useState("ACTIVE")
+    const [isLoading, setLoadingState] = useState(false)
 
 
     const handleNameUpdate = (e: any) => {
         updateName(e.target.value)
+        console.log(name)
     }
 
     const handleDropdownChange = (e: any) => {
@@ -28,8 +30,27 @@ const CreateCampaignModal: React.FC<DialogBoxProps> = ({ isOpen, onClose }) => {
         updateStatus(e ? "ACTIVE" : "PAUSED")
     }
 
-    const handleSubmit = () => {
 
+    const handleSubmit = async () => {
+        setLoadingState(true)
+
+        try {
+            const { adAccountId, getAdAccountIdError } = await metaMarketingApi.getAdAccountId(accessToken)
+            if (getAdAccountIdError) {
+                console.error(getAdAccountIdError)
+            }
+
+            const campaign = {
+                name: name,
+                objective: objective,
+                status: status,
+            }
+
+            const response = await metaMarketingApi.createCampaign(campaign, adAccountId, accessToken);
+            setLoadingState(false)
+        } catch (e) { } finally {
+            setLoadingState(false)
+        }
     }
 
 
@@ -39,8 +60,8 @@ const CreateCampaignModal: React.FC<DialogBoxProps> = ({ isOpen, onClose }) => {
             onClose={onClose}
         >
             <div className="flex flex-col p-6 rounded-lg bg-white mb-4 text-black">
-                <p className="text-black font-bold text-2xl">Create Campaign</p>
-                <input className="border-slate-500 border placeholder-slate-400 contrast-more:border-slate-400 contrast-more:placeholder-slate-500 p-2 text-black rounded-lg" placeholder="My Awesome Campaign" onChange={handleNameUpdate} />
+                <p className="text-black font-bold text-2xl mb-6">Create Campaign</p>
+                <input className="border-slate-500 border placeholder-slate-400 contrast-more:border-slate-400 contrast-more:placeholder-slate-500 p-2 text-black rounded-lg mb-2" placeholder="My Awesome Campaign" onChange={handleNameUpdate} />
 
                 <div className="border-slate-500 border placeholder-slate-400 p-2 text-black rounded-lg mt-2">
                     <label htmlFor="dropdown">Campaign Objective:</label>
@@ -57,11 +78,11 @@ const CreateCampaignModal: React.FC<DialogBoxProps> = ({ isOpen, onClose }) => {
                 <div className="border-slate-500 placeholder-slate-400 p-2 text-black mt-2 flex space-x-4">
                     <label>Status:</label>
                     <div className='flex flex-col items-center'>
-                        <SwitchComponent checked={"ACTIVE" == "ACTIVE"} onChange={handleSwitchChange} />
-                        <p className='font-bold text-xs'>ACTIVE</p>
+                        <SwitchComponent checked={status == "ACTIVE"} onChange={handleSwitchChange} />
+                        <p className='font-bold text-xs'>{status}</p>
                     </div>
                 </div>
-                <ActionButton loading={false} normalText="Create Campaign" loadingText="Creating Campaign" handleSubmit={handleSubmit} />
+                <ActionButton isLoading={isLoading} normalText="Create Campaign" loadingText="Creating..." handleSubmit={handleSubmit} />
             </div>
         </Dialog>
     );
