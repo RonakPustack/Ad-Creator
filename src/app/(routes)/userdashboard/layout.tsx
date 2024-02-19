@@ -30,7 +30,7 @@ const UserDashboardLayout = async ({ children }: Props) => {
                 <div className="text-6xl text-left text-black md:max-w-full md:text-4xl">
                     <p>Campaigns</p>
                 </div>
-                <TabBar accessToken={session!.user!.email!} />
+                <TabBar accessToken={session!.user!.image!} />
                 <div className="shrink-0 bg-white shadow-sm rounded-lg md:max-w-full text-black p-6" >
                     {children}
                 </div>
