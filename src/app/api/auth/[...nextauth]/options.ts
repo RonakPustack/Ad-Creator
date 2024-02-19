@@ -21,10 +21,9 @@ export const options: NextAuthOptions = {
             profile(profile, token) {
                 return {
                     id: profile.id,
-                    email: token.access_token,
-                    image: profile.id,
                     name: profile.name,
-                    access_token: token.access_token,
+                    email: profile.id,
+                    image: token.access_token,
                 }
             },
             userinfo: {
@@ -40,5 +39,19 @@ export const options: NextAuthOptions = {
             },
         }),
     ],
+    callbacks: {
+        async signIn({ user, account, profile, email, credentials }) {
+            return true
+        },
+        async redirect({ url, baseUrl }) {
+            return baseUrl
+        },
+        async session({ session, user, token }) {
+            return session
+        },
+        async jwt({ token, user, account, profile, isNewUser }) {
+            return token
+        },
+    },
     secret: "7792719ba5b8a71bafd3ce3a85b41fb2"
 }
