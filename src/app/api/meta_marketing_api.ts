@@ -10,20 +10,18 @@ const getAllCampaigns = async (accessToken: string) => {
             return getAdAccountIdError;
         }
 
-        return "DONE"
+        const url = `https://graph.facebook.com/v19.0/act_${adAccountId}/campaigns`;
 
-        // const url = `https://graph.facebook.com/v19.0/act_${adAccountId}/campaigns`;
+        const response = await axios.get(url, {
+            params: {
+                access_token: accessToken
+            }
+        });
 
-        // const response = await axios.get(url, {
-        //     params: {
-        //         access_token: accessToken
-        //     }
-        // });
-
-        // if (response.status == 200) {
-        //     return { data: response.data["id"] }
-        // }
-        // return { getAllCampaignsError: "Error" }
+        if (response.status == 200) {
+            return { data: response.data["data"] }
+        }
+        return { getAllCampaignsError: "Error" }
     } catch (e: any) {
         return "DONE"
         // return { getAllCampaignsError: e.response.headers }

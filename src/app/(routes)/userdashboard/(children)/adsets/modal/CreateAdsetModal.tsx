@@ -78,7 +78,6 @@ const CreateAdsetModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessTok
         }
     }
 
-
     return (
         <Dialog
             isOpen={isOpen}
