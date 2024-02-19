@@ -10,7 +10,7 @@ const getAllCampaigns = async (accessToken: string) => {
             return getAdAccountIdError;
         }
 
-        const url = `https://graph.facebook.com/v19.0/act_${adAccountId}/campaigns`;
+        const url = `https://graph.facebook.com/v19.0/act_${adAccountId}/campaigns?fields=name,status,objective`;
 
         const response = await axios.get(url, {
             params: {

@@ -32,7 +32,7 @@ const Campaign = async () => {
                 return;
             }
 
-            updateCampaignData(data)
+            updateCampaignData(data["data"])
         }, 1000);
     }, [])
 
