@@ -147,7 +147,7 @@ const createAdSet = async (adset: any, campaignId: any, accountId: any, accessTo
         if (response.status == 200) {
             return { adSetId: response.data["id"] }
         }
-        return { createAdSetError: `createCampaignError in API: ${response}` }
+        return { createAdSetError: `createAdSetError in API: ${response}` }
     } catch (e: any) {
         return { createAdSetError: e.response.headers }
     }

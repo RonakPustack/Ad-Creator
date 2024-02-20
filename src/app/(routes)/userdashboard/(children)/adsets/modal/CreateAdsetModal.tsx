@@ -76,7 +76,7 @@ const CreateAdsetModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessTok
 
             if (createAdSetError) {
                 console.log(JSON.stringify(createAdSetError))
-                setErrorMessage(createAdSetError.response.data.error.message)
+                setErrorMessage(JSON.stringify(createAdSetError))
                 return;
             }
             setLoadingState(false)
