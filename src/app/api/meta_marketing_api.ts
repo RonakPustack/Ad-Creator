@@ -149,7 +149,7 @@ const createAdSet = async (adset: any, campaignId: any, accountId: any, accessTo
         }
         return { createAdSetError: `createAdSetError in API: ${response}` }
     } catch (e: any) {
-        return { createAdSetError: e.response.headers }
+        return { createAdSetError: e }
     }
 }
 
