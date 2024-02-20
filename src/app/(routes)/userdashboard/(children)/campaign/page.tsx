@@ -17,14 +17,19 @@ import metaMarketingApi from "../../../../api/meta_marketing_api";
 import { options } from "../../../../api/auth/[...nextauth]/options"
 import { getServerSession } from "next-auth/next"
 
-const Campaign = async () => {
+
+
+const delay = (delay: number) => new Promise((res) => {
+    setTimeout(res, delay)
+})
+
+const Campaign = () => {
     const [campaignData, updateCampaignData] = useState([{ id: "default", status: "", name: "", objective: "" }]);
 
     useEffect(() => {
-        const accessToken = localStorage.getItem("access_token")
-        console.log(accessToken)
-
-        setTimeout(async () => {
+        const afterSomeTime = async () => {
+            await delay(5000);
+            const accessToken = localStorage.getItem("access_token")
             const { data, getAllCampaignsError } = await metaMarketingApi.getAllCampaigns(accessToken!);
 
             if (getAllCampaignsError) {
@@ -32,40 +37,16 @@ const Campaign = async () => {
                 return;
             }
 
+            console.log(data["data"])
             updateCampaignData(data["data"])
-        }, 1000);
-    }, [])
+        }
 
-    // const campaignData = [
-    //     {
-    //         "name": "TEST",
-    //         "status": "ACTIVE",
-    //         "objective": "OUTCOME_AWARENESS",
-    //         "id": "120206692019020608"
-    //     },
-    //     {
-    //         "name": "TEST",
-    //         "status": "PAUSED",
-    //         "objective": "OUTCOME_AWARENESS",
-    //         "id": "120206691071310608"
-    //     },
-    //     {
-    //         "name": "Ronak's Campaign",
-    //         "status": "ACTIVE",
-    //         "objective": "OUTCOME_APP_PROMOTION",
-    //         "id": "120206685038780608"
-    //     },
-    //     {
-    //         "name": "Ronak's Campaign",
-    //         "status": "ACTIVE",
-    //         "objective": "OUTCOME_APP_PROMOTION",
-    //         "id": "120206685028500608"
-    //     }
-    // ];
+        afterSomeTime();
+    }, []);
 
     return (
         <>
-            {campaignData.length > 0 && campaignData[0].id != "default" ?
+            {campaignData.length > 0 ?
                 <Table aria-label="Example static collection table">
                     <TableHeader>
                         <TableColumn>Status</TableColumn>
@@ -91,7 +72,7 @@ const Campaign = async () => {
                         ))}
                     </TableBody>
                 </Table>
-                : <p>No Campaigns Found!</p>
+                : <p>{campaignData.length}</p>
             }
         </>
     );
