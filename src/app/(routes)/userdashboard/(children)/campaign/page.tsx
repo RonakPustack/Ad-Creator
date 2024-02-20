@@ -37,9 +37,7 @@ const Campaign = () => {
                 return;
             }
 
-            console.log(data)
-            console.log(data["data"])
-            // updateCampaignData(data["data"])
+            updateCampaignData(data)
         }
 
         afterSomeTime();
