@@ -19,6 +19,7 @@ const CreateAdsetModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessTok
     const [bidAmount, updateBidAmount] = useState(0)
     const [dailyBudget, updateDailyBudget] = useState(0)
     const [isLoading, setLoadingState] = useState(false)
+    const [errorMessage, setErrorMessage] = useState("")
 
     const handleNameUpdate = (e: any) => {
         updateName(e.target.value);
@@ -57,22 +58,29 @@ const CreateAdsetModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessTok
         try {
             const { adAccountId, getAdAccountIdError } = await metaMarketingApi.getAdAccountId(accessToken)
             if (getAdAccountIdError) {
-                console.error(getAdAccountIdError)
+                console.log(JSON.stringify(getAdAccountIdError))
+                setErrorMessage(getAdAccountIdError.response.data.error.message)
+                return;
             }
 
             const adset = {
                 name: name,
-                daily_budget: dailyBudget,
-                bid_amount: bidAmount,
+                daily_budget: dailyBudget * 100,
+                bid_amount: bidAmount * 100,
                 billing_event: billingEvent,
                 optimization_goal: optimizationGoal,
                 status: status,
             }
 
-            console.log(campaignId)
+            const { adSetId, createAdSetError } = await metaMarketingApi.createAdSet(adset, campaignId, adAccountId, accessToken);
 
-            const response = await metaMarketingApi.createAdSet(adset, campaignId, adAccountId, accessToken);
+            if (createAdSetError) {
+                console.log(JSON.stringify(createAdSetError))
+                setErrorMessage(createAdSetError.response.data.error.message)
+                return;
+            }
             setLoadingState(false)
+            onClose();
         } catch (e) { } finally {
             setLoadingState(false)
         }
@@ -129,6 +137,7 @@ const CreateAdsetModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessTok
                         <p className='font-bold text-xs'> {status}</p>
                     </div>
                 </div>
+                {errorMessage ? <p className='mt-4 text-red-700 align-middle text-sm'>{errorMessage}</p> : <></>}
                 <ActionButton isLoading={isLoading} normalText="Create Adset" loadingText="Creating..." handleSubmit={handleSubmit} />
             </div>
         </Dialog>

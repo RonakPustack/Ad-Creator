@@ -18,7 +18,6 @@ import Link from "next/link";
 const Ads = () => {
     const params = useParams();
     const adSetId = params.adSetId
-
     const [adData, updateAdData] = useState([{ id: "default", status: "", name: "", preview_shareable_link: "", campaign_id: "", adset_id: "" }]);
 
     useEffect(() => {

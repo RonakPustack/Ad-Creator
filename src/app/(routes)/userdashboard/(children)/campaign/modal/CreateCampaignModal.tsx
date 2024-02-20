@@ -15,6 +15,7 @@ const CreateCampaignModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, access
     const [objective, updateObjective] = useState("OUTCOME_AWARENESS");
     const [status, updateStatus] = useState("ACTIVE")
     const [isLoading, setLoadingState] = useState(false)
+    const [errorMessage, setErrorMessage] = useState("")
 
 
     const handleNameUpdate = (e: any) => {
@@ -37,7 +38,10 @@ const CreateCampaignModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, access
         try {
             const { adAccountId, getAdAccountIdError } = await metaMarketingApi.getAdAccountId(accessToken)
             if (getAdAccountIdError) {
-                console.error(getAdAccountIdError)
+
+                console.log(JSON.stringify(getAdAccountIdError))
+                setErrorMessage(getAdAccountIdError.response.data.error.message)
+                return;
             }
 
             const campaign = {
@@ -46,8 +50,14 @@ const CreateCampaignModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, access
                 status: status,
             }
 
-            const response = await metaMarketingApi.createCampaign(campaign, adAccountId, accessToken);
-            setLoadingState(false)
+            const { campaignId, createCampaignError } = await metaMarketingApi.createCampaign(campaign, adAccountId, accessToken);
+            if (createCampaignError) {
+                console.log(JSON.stringify(createCampaignError))
+                setErrorMessage(createCampaignError.response.data.error.message)
+                return;
+            }
+
+            onClose();
         } catch (e) { } finally {
             setLoadingState(false)
         }
@@ -82,6 +92,7 @@ const CreateCampaignModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, access
                         <p className='font-bold text-xs'>{status}</p>
                     </div>
                 </div>
+                {errorMessage ? <p className='mt-4 text-red-700 align-middle text-sm'>{errorMessage}</p> : <></>}
                 <ActionButton isLoading={isLoading} normalText="Create Campaign" loadingText="Creating..." handleSubmit={handleSubmit} />
             </div>
         </Dialog>

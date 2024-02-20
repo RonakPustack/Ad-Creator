@@ -19,6 +19,7 @@ const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken
     const [imageUrl, setImageUrl] = useState('');
     const [base64String, setBase64String] = useState('');
     const [adTitle, setAdTitle] = useState('');
+    const [errorMessage, setErrorMessage] = useState("")
 
     const callToActionList = [
         { "name": "Book Travel", "value": "BOOK_TRAVEL" },
@@ -155,7 +156,9 @@ const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken
         try {
             const { adAccountId, getAdAccountIdError } = await metaMarketingApi.getAdAccountId(accessToken)
             if (getAdAccountIdError) {
-                console.error(getAdAccountIdError)
+                console.log(JSON.stringify(getAdAccountIdError));
+                setErrorMessage(getAdAccountIdError.response.data.error.message)
+                return;
             }
 
 
@@ -170,13 +173,25 @@ const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken
 
             const { creativeId, createAdCreativeError } = await metaMarketingApi.createAdCreative(adCreative, imageHash, adAccountId, accessToken);
 
+            if(createAdCreativeError){
+                console.log(JSON.stringify(createAdCreativeError));
+                setErrorMessage(createAdCreativeError.response.data.error.message)
+                return;
+            }
+
 
             const ad = {
                 name: name,
                 status: status,
             }
-            const response = await metaMarketingApi.createAd(ad, adSetId, creativeId, adAccountId, accessToken);
+            const {adId, createAdError } = await metaMarketingApi.createAd(ad, adSetId, creativeId, adAccountId, accessToken);
+            if(createAdError){
+                console.log(JSON.stringify(createAdError));
+                setErrorMessage(createAdError.data.error.message)
+                return;
+            }
             setLoadingState(false)
+            onClose();
         } catch (e) { } finally {
             setLoadingState(false)
         }
@@ -222,7 +237,7 @@ const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken
                         <p className='font-bold text-xs'> {status}</p>
                     </div>
                 </div>
-
+                {errorMessage ? <p className='mt-4 text-red-700 align-middle text-sm'>{errorMessage}</p> : <></>}
                 <ActionButton isLoading={isLoading} normalText="Create Ad" loadingText="Creating..." handleSubmit={handleSubmit} />
             </div>
         </Dialog>
