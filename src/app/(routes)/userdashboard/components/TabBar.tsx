@@ -8,8 +8,6 @@ import CreateAdsetModal from "../(children)/adsets/modal/CreateAdsetModal";
 import CreateAdsModal from "../(children)/ads/modal/CreateAdsModal";
 
 export default function TabBar({ accessToken }: { accessToken: string }) {
-
-    const router = useRouter();
     const pathname = usePathname();
     const params = useParams();
 

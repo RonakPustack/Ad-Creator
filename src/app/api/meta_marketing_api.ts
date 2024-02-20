@@ -24,7 +24,57 @@ const getAllCampaigns = async (accessToken: string) => {
         return { getAllCampaignsError: "Error" }
     } catch (e: any) {
         return "DONE"
-        // return { getAllCampaignsError: e.response.headers }
+    }
+}
+
+const getAdsets = async (accessToken: string) => {
+    try {
+
+        const { adAccountId, getAdAccountIdError } = await getAdAccountId(accessToken);
+
+        if (getAdAccountIdError) {
+            return getAdAccountIdError;
+        }
+
+        const url = `https://graph.facebook.com/v19.0/act_${adAccountId}/adsets?fields=campaign_id,name,optimization_goal,bid_strategy,status`;
+
+        const response = await axios.get(url, {
+            params: {
+                access_token: accessToken
+            }
+        });
+
+        if (response.status == 200) {
+            return { data: response.data["data"] }
+        }
+        return { getAdsetsError: "Error" }
+    } catch (e: any) {
+        return "DONE"
+    }
+}
+
+const getAds = async (accessToken: string) => {
+    try {
+        const { adAccountId, getAdAccountIdError } = await getAdAccountId(accessToken);
+
+        if (getAdAccountIdError) {
+            return getAdAccountIdError;
+        }
+
+        const url = `https://graph.facebook.com/v19.0/act_${adAccountId}/ads?fields=campaign_id,adset_id,name,status,preview_shareable_link`;
+
+        const response = await axios.get(url, {
+            params: {
+                access_token: accessToken
+            }
+        });
+
+        if (response.status == 200) {
+            return { data: response.data["data"] }
+        }
+        return { getAdsError: "Error" }
+    } catch (e: any) {
+        return "DONE"
     }
 }
 
@@ -244,6 +294,8 @@ const testMetaMarketing = async (
 
 const combinedExports = {
     testMetaMarketing,
+    getAds,
+    getAdsets,
     getAllCampaigns,
     getAdAccountId,
     createCampaign,
