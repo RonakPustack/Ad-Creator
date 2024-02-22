@@ -2,7 +2,8 @@ import SwitchComponent from '@/app/components/helper/SwitchComponent';
 import React, { useState } from 'react';
 import ActionButton from '../../../components/ActionButton';
 import Dialog from '../../../components/Dialog';
-import metaMarketingApi from "../../../../../api/meta_marketing_api";
+import api from "../../../../../api/arti_api";
+import metaApi from "../../../../../api/meta_marketing_api";
 
 interface DialogBoxProps {
     isOpen: boolean;
@@ -20,7 +21,6 @@ const CreateCampaignModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, access
 
     const handleNameUpdate = (e: any) => {
         updateName(e.target.value)
-        console.log(name)
     }
 
     const handleDropdownChange = (e: any) => {
@@ -36,9 +36,9 @@ const CreateCampaignModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, access
         setLoadingState(true)
 
         try {
-            const { adAccountId, getAdAccountIdError } = await metaMarketingApi.getAdAccountId(accessToken)
-            if (getAdAccountIdError) {
+            const { adAccountId, getAdAccountIdError } = await api.getAdAccountId(accessToken)
 
+            if (getAdAccountIdError) {
                 console.log(JSON.stringify(getAdAccountIdError))
                 setErrorMessage(getAdAccountIdError.response.data.error.message)
                 return;
@@ -50,7 +50,7 @@ const CreateCampaignModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, access
                 status: status,
             }
 
-            const { campaignId, createCampaignError } = await metaMarketingApi.createCampaign(campaign, adAccountId, accessToken);
+            const { campaignId, createCampaignError } = await api.createCampaign(campaign, adAccountId!, accessToken);
             if (createCampaignError) {
                 console.log(JSON.stringify(createCampaignError))
                 setErrorMessage(createCampaignError.response.data.error.message)
