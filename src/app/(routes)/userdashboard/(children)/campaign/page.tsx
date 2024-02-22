@@ -23,6 +23,7 @@ const Campaign = () => {
 
     useEffect(() => {
         const queryData = async () => {
+            await delay(1000)
             const { data, getAllCampaignsError } = await api.getAllCampaigns();
 
             if (getAllCampaignsError) {

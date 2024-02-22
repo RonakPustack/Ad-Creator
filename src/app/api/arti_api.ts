@@ -1,17 +1,26 @@
 import axios from "axios";
 
-const PORT_NAME = "localhost:8081"
-const ROUTE_NAME = "ads"
+const isLocal = false
 
+const localApiConfig = {
+    baseUrl: "localhost:8081",
+    routeName: "ads",
+    protocol: "http",
+}
 
+const liveApiConfig = {
+    baseUrl: "api.artiai.org",
+    routeName: "ads",
+    protocol: "https",
+}
+
+const apiConfig = isLocal ? localApiConfig : liveApiConfig;
 
 const getAllCampaigns = async () => {
     try {
-        const url = `http://${PORT_NAME}/v1/${ROUTE_NAME}/campaigns`;
+        const url = `${apiConfig.protocol}://${apiConfig.baseUrl}/v1/${apiConfig.routeName}/campaigns`;
 
         const response = await axios.get(url);
-
-        console.log(response.data)
 
         if (response.status == 200) {
             return { data: response.data.data }
@@ -27,9 +36,9 @@ const getAdsets = async (campaignId: string) => {
         let url;
 
         if (campaignId) {
-            url = `http://${PORT_NAME}/v1/${ROUTE_NAME}/adsets/${campaignId}`;
+            url = `${apiConfig.protocol}://${apiConfig.baseUrl}/v1/${apiConfig.routeName}/adsets/${campaignId}`;
         } else {
-            url = `http://${PORT_NAME}/v1/${ROUTE_NAME}/adsets`;
+            url = `${apiConfig.protocol}://${apiConfig.baseUrl}/v1/${apiConfig.routeName}/adsets`;
         }
 
         const response = await axios.get(url);
@@ -50,9 +59,9 @@ const getAds = async (adSetId: string) => {
         let url;
 
         if (adSetId) {
-            url = `http://${PORT_NAME}/v1/${ROUTE_NAME}/ad_entities/${adSetId}`;
+            url = `${apiConfig.protocol}://${apiConfig.baseUrl}/v1/${apiConfig.routeName}/ad_entities/${adSetId}`;
         } else {
-            url = `http://${PORT_NAME}/v1/${ROUTE_NAME}/ad_entities`;
+            url = `${apiConfig.protocol}://${apiConfig.baseUrl}/v1/${apiConfig.routeName}/ad_entities`;
         }
 
         const response = await axios.get(url);
@@ -68,13 +77,19 @@ const getAds = async (adSetId: string) => {
 
 const createCampaign = async (campaign: any, accountId: string, accessToken: string) => {
     try {
-        const url = `http://${PORT_NAME}/v1/${ROUTE_NAME}/campaigns`;
+        const url = `${apiConfig.protocol}://${apiConfig.baseUrl}/v1/${apiConfig.routeName}/campaigns`;
 
-        const response = await axios.post(url, {
+        console.log(url)
+
+        const campaignObject = {
             campaign: campaign,
             ad_account_id: accountId,
-            access_token: accessToken,
-        });
+            access_token: accessToken
+        };
+
+        console.log(campaignObject)
+
+        const response = await axios.post(url, campaignObject);
 
         if (response.status == 200) {
             return { campaignId: response.data["id"] }
@@ -87,7 +102,7 @@ const createCampaign = async (campaign: any, accountId: string, accessToken: str
 
 const createAdSet = async (adSet: any, accountId: any, accessToken: any) => {
     try {
-        const url = `http://${PORT_NAME}/v1/${ROUTE_NAME}/adsets`;
+        const url = `${apiConfig.protocol}://${apiConfig.baseUrl}/v1/${apiConfig.routeName}/adsets`;
 
         adSet.promotedObject = {
             "application_id": "645064660474863",
@@ -189,13 +204,18 @@ const createAdCreative = async (adCreative: any, imageHash: any, accountId: any,
 
 const createAd = async (ad: any, accountId: any, accessToken: any) => {
     try {
-        const url = `http://${PORT_NAME}/v1/${ROUTE_NAME}/ad_entities`;
+        const url = `${apiConfig.protocol}://${apiConfig.baseUrl}/v1/${apiConfig.routeName}/ad_entities`;
 
-        const response = await axios.post(url, {
+        const reqBody = {
             ad: ad,
             account_id: accountId,
             access_token: accessToken
-        });
+        }
+
+        console.log(url)
+        console.log(JSON.stringify(reqBody))
+
+        const response = await axios.post(url, reqBody);
 
         if (response.status == 200) {
             return { adId: response.data["id"] }

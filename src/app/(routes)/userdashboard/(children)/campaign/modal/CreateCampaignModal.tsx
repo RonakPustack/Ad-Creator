@@ -21,7 +21,6 @@ const CreateCampaignModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, access
 
     const handleNameUpdate = (e: any) => {
         updateName(e.target.value)
-        console.log(name)
     }
 
     const handleDropdownChange = (e: any) => {

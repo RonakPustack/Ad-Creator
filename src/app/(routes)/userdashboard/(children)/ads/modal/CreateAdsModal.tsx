@@ -139,7 +139,6 @@ const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken
 
     const handleNameUpdate = (e: any) => {
         updateName(e.target.value)
-        console.log(name)
     }
 
     const handleSwitchChange = (e: Boolean) => {
@@ -163,22 +162,22 @@ const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken
             }
 
 
-            // const { imageHash, uploadImageError } = await api.uploadImage(base64String, adAccountId, accessToken);
+            const { imageHash, uploadImageError } = await api.uploadImage(base64String, adAccountId, accessToken);
 
 
-            // const adCreative = {
-            //     name: name,
-            //     call_to_action_type: callToActionType,
-            //     message: adTitle,
-            // }
+            const adCreative = {
+                name: name,
+                call_to_action_type: callToActionType,
+                message: adTitle,
+            }
 
-            // const { creativeId, createAdCreativeError } = await api.createAdCreative(adCreative, imageHash, adAccountId, accessToken);
+            const { creativeId, createAdCreativeError } = await api.createAdCreative(adCreative, imageHash, adAccountId, accessToken);
 
-            // if (createAdCreativeError) {
-            //     console.log(JSON.stringify(createAdCreativeError));
-            //     setErrorMessage(createAdCreativeError.response.data.error.message)
-            //     return;
-            // }
+            if (createAdCreativeError) {
+                console.log(JSON.stringify(createAdCreativeError));
+                setErrorMessage(createAdCreativeError.response.data.error.message)
+                return;
+            }
 
 
             const ad = {
@@ -186,7 +185,7 @@ const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken
                 status: status,
                 adSetId: adSetId,
                 campaignId: campaignId,
-                creativeId: "120206974787780608",
+                creativeId: creativeId,
             }
             const { adId, createAdError } = await api.createAd(ad, adAccountId, accessToken);
             if (createAdError) {
