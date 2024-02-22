@@ -2,7 +2,8 @@ import SwitchComponent from '@/app/components/helper/SwitchComponent';
 import React, { useState } from 'react';
 import ActionButton from '../../../components/ActionButton';
 import Dialog from '../../../components/Dialog';
-import metaMarketingApi from "../../../../../api/meta_marketing_api";
+import api from "../../../../../api/arti_api";
+import metaApi from "../../../../../api/meta_marketing_api";
 
 interface DialogBoxProps {
     isOpen: boolean;
@@ -56,23 +57,24 @@ const CreateAdsetModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessTok
         setLoadingState(true)
 
         try {
-            const { adAccountId, getAdAccountIdError } = await metaMarketingApi.getAdAccountId(accessToken)
+            const { adAccountId, getAdAccountIdError } = await api.getAdAccountId(accessToken)
             if (getAdAccountIdError) {
                 console.log(JSON.stringify(getAdAccountIdError))
                 setErrorMessage(getAdAccountIdError.response.data.error.message)
                 return;
             }
 
-            const adset = {
+            const adSet = {
                 name: name,
-                daily_budget: dailyBudget * 100,
-                bid_amount: bidAmount * 100,
-                billing_event: billingEvent,
-                optimization_goal: optimizationGoal,
+                dailyBudget: dailyBudget * 100,
+                bidAmount: bidAmount * 100,
+                billingEvent: billingEvent,
+                optimizationGoal: optimizationGoal,
+                campaignId: campaignId,
                 status: status,
             }
 
-            const { adSetId, createAdSetError } = await metaMarketingApi.createAdSet(adset, campaignId, adAccountId, accessToken);
+            const { adSetId, createAdSetError } = await api.createAdSet(adSet, adAccountId, accessToken);
 
             if (createAdSetError) {
                 console.log(JSON.stringify(createAdSetError))

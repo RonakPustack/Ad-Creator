@@ -12,30 +12,29 @@ import {
 import SwitchComponent from '@/app/components/helper/SwitchComponent';
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import metaMarketingApi from "../../../../api/meta_marketing_api";
+import api from "../../../../api/arti_api";
 
 const delay = (delay: number) => new Promise((res) => {
     setTimeout(res, delay)
 })
 
 const Campaign = () => {
-    const [campaignData, updateCampaignData] = useState([{ id: "default", status: "", name: "", objective: "" }]);
+    const [campaignData, updateCampaignData] = useState([{ id: "default", campaignId: "", status: "", name: "", objective: "" }]);
 
     useEffect(() => {
         const queryData = async () => {
-            const accessToken = localStorage.getItem("access_token")
-            const { data, getAllCampaignsError } = await metaMarketingApi.getAllCampaigns(accessToken!);
+            const { data, getAllCampaignsError } = await api.getAllCampaigns();
 
             if (getAllCampaignsError) {
                 console.log(getAllCampaignsError)
                 return;
             }
-
             updateCampaignData(data)
         }
 
         queryData();
     }, []);
+
 
     return (
         <>
@@ -52,7 +51,7 @@ const Campaign = () => {
                         {campaignData.map((item, index) => (
                             <TableRow key={item.id}>
                                 <TableCell><SwitchComponent checked={item.status == "ACTIVE"} onChange={() => { }} /></TableCell>
-                                <TableCell><Link href={`/userdashboard/adsets/${item.id}`} className='underline text-blue-600'>{item.id}</Link></TableCell>
+                                <TableCell><Link href={`/userdashboard/adsets/${item.campaignId}`} className='underline text-blue-600'>{item.campaignId}</Link></TableCell>
                                 <TableCell>{item.name}</TableCell>
                                 <TableCell>{item.objective}</TableCell>
                                 <TableCell>

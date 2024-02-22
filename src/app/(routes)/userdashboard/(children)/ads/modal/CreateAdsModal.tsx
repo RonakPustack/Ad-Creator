@@ -2,16 +2,17 @@ import SwitchComponent from '@/app/components/helper/SwitchComponent';
 import React, { useState } from 'react';
 import ActionButton from '../../../components/ActionButton';
 import Dialog from '../../../components/Dialog';
-import metaMarketingApi from "../../../../../api/meta_marketing_api";
+import api from "../../../../../api/arti_api";
 
 interface DialogBoxProps {
     isOpen: boolean;
     onClose: () => void;
     accessToken: string;
     adSetId: string;
+    campaignId: string;
 }
 
-const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken, adSetId }) => {
+const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken, adSetId, campaignId }) => {
     const [name, updateName] = useState("");
     const [status, updateStatus] = useState("ACTIVE")
     const [isLoading, setLoadingState] = useState(false)
@@ -154,7 +155,7 @@ const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken
         setLoadingState(true)
 
         try {
-            const { adAccountId, getAdAccountIdError } = await metaMarketingApi.getAdAccountId(accessToken)
+            const { adAccountId, getAdAccountIdError } = await api.getAdAccountId(accessToken)
             if (getAdAccountIdError) {
                 console.log(JSON.stringify(getAdAccountIdError));
                 setErrorMessage(getAdAccountIdError.response.data.error.message)
@@ -162,30 +163,33 @@ const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken
             }
 
 
-            const { imageHash, uploadImageError } = await metaMarketingApi.uploadImage(base64String, adAccountId, accessToken);
+            // const { imageHash, uploadImageError } = await api.uploadImage(base64String, adAccountId, accessToken);
 
 
-            const adCreative = {
-                name: name,
-                call_to_action_type: callToActionType,
-                message: adTitle,
-            }
+            // const adCreative = {
+            //     name: name,
+            //     call_to_action_type: callToActionType,
+            //     message: adTitle,
+            // }
 
-            const { creativeId, createAdCreativeError } = await metaMarketingApi.createAdCreative(adCreative, imageHash, adAccountId, accessToken);
+            // const { creativeId, createAdCreativeError } = await api.createAdCreative(adCreative, imageHash, adAccountId, accessToken);
 
-            if(createAdCreativeError){
-                console.log(JSON.stringify(createAdCreativeError));
-                setErrorMessage(createAdCreativeError.response.data.error.message)
-                return;
-            }
+            // if (createAdCreativeError) {
+            //     console.log(JSON.stringify(createAdCreativeError));
+            //     setErrorMessage(createAdCreativeError.response.data.error.message)
+            //     return;
+            // }
 
 
             const ad = {
                 name: name,
                 status: status,
+                adSetId: adSetId,
+                campaignId: campaignId,
+                creativeId: "120206974787780608",
             }
-            const {adId, createAdError } = await metaMarketingApi.createAd(ad, adSetId, creativeId, adAccountId, accessToken);
-            if(createAdError){
+            const { adId, createAdError } = await api.createAd(ad, adAccountId, accessToken);
+            if (createAdError) {
                 console.log(JSON.stringify(createAdError));
                 setErrorMessage(createAdError.data.error.message)
                 return;

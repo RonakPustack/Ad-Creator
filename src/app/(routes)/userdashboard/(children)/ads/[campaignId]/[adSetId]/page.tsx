@@ -12,26 +12,24 @@ import {
 import SwitchComponent from '@/app/components/helper/SwitchComponent';
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import metaMarketingApi from "../../../../../api/meta_marketing_api";
+import api from "../../../../../../api/arti_api";
 import Link from "next/link";
 
 const Ads = () => {
     const params = useParams();
     const adSetId = params.adSetId
-    const [adData, updateAdData] = useState([{ id: "default", status: "", name: "", preview_shareable_link: "", campaign_id: "", adset_id: "" }]);
+    const [adData, updateAdData] = useState([{ id: "default", status: "", name: "", previewShareableLink: "", campaign_id: "", adSetId: "" }]);
 
     useEffect(() => {
         const queryData = async () => {
-            const accessToken = localStorage.getItem("access_token")
-            const { data, getAdsetsError } = await metaMarketingApi.getAds(accessToken!);
+            const { data, getAdsError } = await api.getAds(adSetId);
 
-            if (getAdsetsError) {
-                console.log(getAdsetsError)
+            if (getAdsError) {
+                console.log(getAdsError)
                 return;
             }
 
-            const adsForAdset = data.filter((item: any) => item.adset_id === adSetId);
-            updateAdData(adsForAdset)
+            updateAdData(data)
         }
 
         queryData();
@@ -45,7 +43,7 @@ const Ads = () => {
                     <TableColumn>Status</TableColumn>
                     <TableColumn>ID</TableColumn>
                     <TableColumn>Name</TableColumn>
-                    <TableColumn>Shareable Link</TableColumn>
+                    {/* <TableColumn>Shareable Link</TableColumn> */}
                     <TableColumn>Adset ID</TableColumn>
                     <TableColumn>Action</TableColumn>
                 </TableHeader>
@@ -55,8 +53,8 @@ const Ads = () => {
                             <TableCell><SwitchComponent checked={item.status == "ACTIVE"} onChange={() => { }} /></TableCell>
                             <TableCell>{item.id}</TableCell>
                             <TableCell>{item.name}</TableCell>
-                            <TableCell><Link href={item.preview_shareable_link} className="underline text-blue-600">{item.preview_shareable_link}</Link></TableCell>
-                            <TableCell>{item.adset_id}</TableCell>
+                            {/* <TableCell><Link href={item.preview_shareable_link} className="underline text-blue-600">{item.preview_shareable_link}</Link></TableCell> */}
+                            <TableCell>{item.adSetId}</TableCell>
                             <TableCell>
                                 <div className="flex">
                                     <div className="p-1 mr-2 bg-slate-300 rounded-md"><MdEdit /></div>

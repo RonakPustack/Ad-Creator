@@ -14,9 +14,8 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 export const options: NextAuthOptions = {
     providers: [
         FacebookProvider({
-            clientId: "645064660474863",
-            clientSecret: "cdcb46d7a5014b2e9d6b9936c4156c0d",
-            authorization: "https://www.facebook.com/v19.0/dialog/oauth?response_type=token&display=popup&client_id=645064660474863&auth_type=rerequest&scope=email,read_insights,pages_show_list,ads_management,ads_read,business_management,pages_read_engagement,pages_read_user_content,pages_manage_ads,pages_manage_posts,public_profile",
+            clientId: "713068484341612",
+            clientSecret: "e7afa5fce3a6e6c5f10fc530eeb0346f",
             // idToken: true,
             profile(profile, token) {
                 return {

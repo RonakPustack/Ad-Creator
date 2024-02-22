@@ -36,7 +36,7 @@ export default function TabBar({ accessToken }: { accessToken: string }) {
                         {tabState.isCampaignTabSelected ? <button className="justify-center items-center text-center text-white bg-blue-600 aspect-square h-[35px] rounded-lg" onClick={openDialog}>+</button> : <></>}
                     </div>
                 </Link>
-                {tabState.isCampaignTabSelected ? <CreateCampaignModal isOpen={isOpen} onClose={closeDialog} accessToken={accessToken} /> : tabState.isAdSetTabSelected ? <CreateAdsetModal isOpen={isOpen} onClose={closeDialog} accessToken={accessToken} campaignId={params.campaignId} /> : <CreateAdsModal isOpen={isOpen} onClose={closeDialog} accessToken={accessToken} adSetId={params.adSetId} />}
+                {tabState.isCampaignTabSelected ? <CreateCampaignModal isOpen={isOpen} onClose={closeDialog} accessToken={accessToken} /> : tabState.isAdSetTabSelected ? <CreateAdsetModal isOpen={isOpen} onClose={closeDialog} accessToken={accessToken} campaignId={params.campaignId} /> : <CreateAdsModal isOpen={isOpen} onClose={closeDialog} accessToken={accessToken} adSetId={params.adSetId} campaignId={params.campaignId} />}
 
                 <Link href="" className={`flex grow rounded-t-lg px-4 py-3 ${tabState.isAdSetTabSelected ? 'scale-100 bg-white' : 'scale-90 bg-slate-200'}`}>
                     <div className={`flex grow justify-between`}>

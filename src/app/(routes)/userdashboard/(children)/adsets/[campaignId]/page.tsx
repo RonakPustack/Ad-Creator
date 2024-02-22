@@ -5,27 +5,25 @@ import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from 
 import Link from "next/link";
 import { MdDelete } from "react-icons/md";
 import { useEffect, useState } from "react";
-import metaMarketingApi from "../../../../../api/meta_marketing_api";
+import api from "../../../../../api/arti_api";
 import { useParams } from "next/navigation";
 
 const Adsets = () => {
     const params = useParams();
     const campaignId = params.campaignId
 
-    const [adsetData, updateAdsetData] = useState([{ id: "default", status: "", name: "", bid_strategy: "", campaign_id: "", optimization_goal: "" }]);
+    const [adsetData, updateAdsetData] = useState([{ id: "default", adSetId: "", status: "", name: "", bidStrategy: "", campaignId: "", optimizationGoal: "" }]);
 
     useEffect(() => {
         const queryData = async () => {
-            const accessToken = localStorage.getItem("access_token")
-            const { data, getAdsetsError } = await metaMarketingApi.getAdsets(accessToken!);
+            const { data, getAdsetsError } = await api.getAdsets(campaignId);
 
             if (getAdsetsError) {
                 console.log(getAdsetsError)
                 return;
             }
 
-            const adsetForCampaign = data.filter((item: any) => item.campaign_id === campaignId);
-            updateAdsetData(adsetForCampaign)
+            updateAdsetData(data)
         }
 
         queryData();
@@ -46,10 +44,10 @@ const Adsets = () => {
                     {adsetData.map((item, index) => (
                         <TableRow key={item.id}>
                             <TableCell><SwitchComponent checked={item.status == "ACTIVE"} onChange={() => { }} /></TableCell>
-                            <TableCell><Link href={`/userdashboard/ads/${item.id}`} className='underline text-blue-600'>{item.id}</Link></TableCell>
+                            <TableCell><Link href={`/userdashboard/ads/${item.campaignId}/${item.adSetId}`} className='underline text-blue-600'>{item.adSetId}</Link></TableCell>
                             <TableCell>{item.name}</TableCell>
-                            <TableCell>{item.bid_strategy}</TableCell>
-                            <TableCell>{item.campaign_id}</TableCell>
+                            <TableCell>{item.bidStrategy}</TableCell>
+                            <TableCell>{item.campaignId}</TableCell>
                             <TableCell>
                                 <div className="flex">
                                     <div className="p-1 bg-red-200 rounded-md"><MdDelete /></div>
