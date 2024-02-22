@@ -7,7 +7,7 @@ import { useState } from "react";
 import CreateAdsetModal from "../(children)/adsets/modal/CreateAdsetModal";
 import CreateAdsModal from "../(children)/ads/modal/CreateAdsModal";
 
-export default function TabBar({ accessToken }: { accessToken: string }) {
+export default function TabBar() {
     const pathname = usePathname();
     const params = useParams();
 
@@ -26,6 +26,8 @@ export default function TabBar({ accessToken }: { accessToken: string }) {
         isAdSetTabSelected: pathname.split("/")[2] == "adsets",
         isAdTabSelected: pathname.split("/")[2] == "ads",
     }
+
+    const accessToken = localStorage.getItem("access_token") ?? 'no-access-token-found';
 
     return (
         <>
