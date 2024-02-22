@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const isLocal = true
+const isLocal = false
 
 const localApiConfig = {
     baseUrl: "localhost:8081",
