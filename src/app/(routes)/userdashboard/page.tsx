@@ -42,6 +42,7 @@ export default function UserDashboard({ user }: Props) {
         <center>
             <h1 className="text-white text-3xl mb-12">{user ? `Welcome ${user!.name}` : "Undefined"}</h1>
             <Link href="/userdashboard/campaign" className="text-white p-5 bg-slate-800 rounded-lg mr-5">Access Dashboard</Link>
+            <Link href="/email" className="text-white p-5 bg-slate-800 rounded-lg mr-5">Send Marketing Email</Link>
             <Link href="/api/auth/signout" className="text-white p-5 bg-slate-800 rounded-lg">Log Out</Link>
         </center>
     </>

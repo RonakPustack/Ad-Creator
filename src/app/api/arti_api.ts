@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const isLocal = false
+const isLocal = true
 
 const localApiConfig = {
     baseUrl: "localhost:8081",
@@ -226,6 +226,22 @@ const createAd = async (ad: any, accountId: any, accessToken: any) => {
     }
 }
 
+const sendMarketingEmail = async () => {
+    try {
+        const url = `${apiConfig.protocol}://${apiConfig.baseUrl}/v1/${apiConfig.routeName}/send_marketing_email`;
+
+        const reqBody = {
+
+        }
+
+        const response = await axios.post(url, reqBody);
+
+        return { response: response }
+    } catch (e: any) {
+        return { sendMarketingEmailError: e }
+    }
+}
+
 
 const getAdAccountId = async (accessToken: any) => {
     try {
@@ -258,6 +274,7 @@ const combinedExports = {
     uploadImage,
     createAdCreative,
     createAd,
+    sendMarketingEmail,
 };
 
 export default combinedExports;
