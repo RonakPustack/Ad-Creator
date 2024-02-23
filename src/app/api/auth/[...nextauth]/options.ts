@@ -40,9 +40,9 @@ const getFacebookApp = (key: string): FacebookAppConfig | undefined => {
 export const options: NextAuthOptions = {
     providers: [
         FacebookProvider({
-            clientId: getFacebookApp("production_artiai")?.clientId!,
-            clientSecret: getFacebookApp("production_artiai")?.clientSecret!,
-            authorization: "https://www.facebook.com/v11.0/dialog/oauth?scope=ads_management",
+            clientId: getFacebookApp("production_pustack")?.clientId!,
+            clientSecret: getFacebookApp("production_pustack")?.clientSecret!,
+            authorization: "https://www.facebook.com/v11.0/dialog/oauth?scope=ads_management,pages_show_list,pages_read_engagement",
             // idToken: true,
             profile(profile, token) {
                 return {
