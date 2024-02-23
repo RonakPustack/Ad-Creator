@@ -10,7 +10,7 @@ const getAllCampaigns = async (accessToken: string) => {
             return getAdAccountIdError;
         }
 
-        const url = `https://graph.facebook.com/v19.0/act_${adAccountId}/campaigns?fields=name,status,objective`;
+        const url = `https://graph.facebook.com/v19.0/${adAccountId}/campaigns?fields=name,status,objective`;
 
         const response = await axios.get(url, {
             params: {
@@ -36,7 +36,7 @@ const getAdsets = async (accessToken: string) => {
             return getAdAccountIdError;
         }
 
-        const url = `https://graph.facebook.com/v19.0/act_${adAccountId}/adsets?fields=campaign_id,name,optimization_goal,bid_strategy,status`;
+        const url = `https://graph.facebook.com/v19.0/${adAccountId}/adsets?fields=campaign_id,name,optimization_goal,bid_strategy,status`;
 
         const response = await axios.get(url, {
             params: {
@@ -61,7 +61,7 @@ const getAds = async (accessToken: string) => {
             return getAdAccountIdError;
         }
 
-        const url = `https://graph.facebook.com/v19.0/act_${adAccountId}/ads?fields=campaign_id,adset_id,name,status,preview_shareable_link`;
+        const url = `https://graph.facebook.com/v19.0/${adAccountId}/ads?fields=campaign_id,adset_id,name,status,preview_shareable_link`;
 
         const response = await axios.get(url, {
             params: {
@@ -80,7 +80,7 @@ const getAds = async (accessToken: string) => {
 
 const createCampaign = async (campaign: any, accountId: string, accessToken: string) => {
     try {
-        const url = `https://graph.facebook.com/v19.0/act_${accountId}/campaigns`;
+        const url = `https://graph.facebook.com/v19.0/${accountId}/campaigns`;
 
         const response = await axios.post(url, {
             name: campaign.name,
@@ -104,7 +104,7 @@ const createCampaign = async (campaign: any, accountId: string, accessToken: str
 
 const createAdSet = async (adset: any, campaignId: any, accountId: any, accessToken: any) => {
     try {
-        const url = `https://graph.facebook.com/v19.0/act_${accountId}/adsets`;
+        const url = `https://graph.facebook.com/v19.0/${accountId}/adsets`;
 
         const response = await axios.post(url, {
             "campaign_id": campaignId,
@@ -156,7 +156,7 @@ const createAdSet = async (adset: any, campaignId: any, accountId: any, accessTo
 const uploadImage = async (imageBytes: any, accountId: any, accessToken: any) => {
     try {
 
-        const url = `https://graph.facebook.com/v19.0/act_${accountId}/adimages`
+        const url = `https://graph.facebook.com/v19.0/${accountId}/adimages`
 
         const response = await axios.post(url, {
             bytes: imageBytes,
@@ -174,7 +174,7 @@ const uploadImage = async (imageBytes: any, accountId: any, accessToken: any) =>
 
 const createAdCreative = async (adCreative: any, imageHash: any, accountId: any, accessToken: any) => {
     try {
-        const url = `https://graph.facebook.com/v19.0/act_${accountId}/adcreatives`
+        const url = `https://graph.facebook.com/v19.0/${accountId}/adcreatives`
 
         const response = await axios.post(url, {
             "name": adCreative.name,
@@ -212,7 +212,7 @@ const createAdCreative = async (adCreative: any, imageHash: any, accountId: any,
 
 const createAd = async (ad: any, adSetId: any, creativeId: any, accountId: any, accessToken: any) => {
     try {
-        const url = `https://graph.facebook.com/v19.0/act_${accountId}/ads`
+        const url = `https://graph.facebook.com/v19.0/${accountId}/ads`
 
         const response = await axios.post(url, {
             name: ad.name,
@@ -242,7 +242,7 @@ const getAdAccountId = async (accessToken: any) => {
         });
 
         if (response.status == 200) {
-            return { adAccountId: response.data.data[0].account_id }
+            return { adAccountId: response.data.data[0].id }
         }
 
         return { getAdAccountIdError: "Error occurred" }

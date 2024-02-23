@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const isLocal = false
+const isLocal = true
 
 const localApiConfig = {
     baseUrl: "localhost:8081",
@@ -16,11 +16,16 @@ const liveApiConfig = {
 
 const apiConfig = isLocal ? localApiConfig : liveApiConfig;
 
-const getAllCampaigns = async () => {
+const getAllCampaigns = async (accountId: string, accessToken: string) => {
     try {
         const url = `${apiConfig.protocol}://${apiConfig.baseUrl}/v1/${apiConfig.routeName}/campaigns`;
 
-        const response = await axios.get(url);
+        const response = await axios.get(url, {
+            params: {
+                account_id: accountId,
+                access_token: accessToken,
+            }
+        });
 
         if (response.status == 200) {
             return { data: response.data.data }
@@ -31,7 +36,7 @@ const getAllCampaigns = async () => {
     }
 }
 
-const getAdsets = async (campaignId: string) => {
+const getAdsets = async (campaignId: string, accountId: string, accessToken: string) => {
     try {
         let url;
 
@@ -41,9 +46,12 @@ const getAdsets = async (campaignId: string) => {
             url = `${apiConfig.protocol}://${apiConfig.baseUrl}/v1/${apiConfig.routeName}/adsets`;
         }
 
-        const response = await axios.get(url);
-
-        console.log(response.data)
+        const response = await axios.get(url, {
+            params: {
+                account_id: accountId,
+                access_token: accessToken,
+            }
+        });
 
         if (response.status == 200) {
             return { data: response.data.data }
@@ -54,7 +62,7 @@ const getAdsets = async (campaignId: string) => {
     }
 }
 
-const getAds = async (adSetId: string) => {
+const getAds = async (adSetId: string, accountId: string, accessToken: string) => {
     try {
         let url;
 
@@ -64,7 +72,12 @@ const getAds = async (adSetId: string) => {
             url = `${apiConfig.protocol}://${apiConfig.baseUrl}/v1/${apiConfig.routeName}/ad_entities`;
         }
 
-        const response = await axios.get(url);
+        const response = await axios.get(url, {
+            params: {
+                account_id: accountId,
+                access_token: accessToken,
+            }
+        });
 
         if (response.status == 200) {
             return { data: response.data.data }
@@ -254,7 +267,7 @@ const getAdAccountId = async (accessToken: any) => {
         });
 
         if (response.status == 200) {
-            return { adAccountId: response.data.data[0].account_id }
+            return { adAccountId: response.data.data[0].id }
         }
 
         return { getAdAccountIdError: "Error occurred" }

@@ -18,11 +18,21 @@ import Link from "next/link";
 const Ads = () => {
     const params = useParams();
     const adSetId = params.adSetId
-    const [adData, updateAdData] = useState([{ id: "default", status: "", name: "", previewShareableLink: "", campaign_id: "", adSetId: "" }]);
+    const [adData, updateAdData] = useState([{ id: "default", status: "", name: "", preview_shareable_link: "", campaign_id: "", adset_id: "" }]);
 
     useEffect(() => {
         const queryData = async () => {
-            const { data, getAdsError } = await api.getAds(adSetId);
+
+            const accessToken = localStorage.getItem("access_token")
+
+            const { adAccountId, getAdAccountIdError } = await api.getAdAccountId(accessToken)
+
+            if (getAdAccountIdError) {
+                console.log(JSON.stringify(getAdAccountIdError))
+                return;
+            }
+
+            const { data, getAdsError } = await api.getAds(adSetId, adAccountId, accessToken!);
 
             if (getAdsError) {
                 console.log(getAdsError)
@@ -43,7 +53,7 @@ const Ads = () => {
                     <TableColumn>Status</TableColumn>
                     <TableColumn>ID</TableColumn>
                     <TableColumn>Name</TableColumn>
-                    {/* <TableColumn>Shareable Link</TableColumn> */}
+                    <TableColumn>Shareable Link</TableColumn>
                     <TableColumn>Adset ID</TableColumn>
                     <TableColumn>Action</TableColumn>
                 </TableHeader>
@@ -53,8 +63,8 @@ const Ads = () => {
                             <TableCell><SwitchComponent checked={item.status == "ACTIVE"} onChange={() => { }} /></TableCell>
                             <TableCell>{item.id}</TableCell>
                             <TableCell>{item.name}</TableCell>
-                            {/* <TableCell><Link href={item.preview_shareable_link} className="underline text-blue-600">{item.preview_shareable_link}</Link></TableCell> */}
-                            <TableCell>{item.adSetId}</TableCell>
+                            <TableCell><Link href={item.preview_shareable_link} className="underline text-blue-600">{item.preview_shareable_link}</Link></TableCell>
+                            <TableCell>{item.adset_id}</TableCell>
                             <TableCell>
                                 <div className="flex">
                                     <div className="p-1 mr-2 bg-slate-300 rounded-md"><MdEdit /></div>

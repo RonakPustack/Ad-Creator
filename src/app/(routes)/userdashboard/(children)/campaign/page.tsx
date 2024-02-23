@@ -21,16 +21,29 @@ const delay = (delay: number) => new Promise((res) => {
 const Campaign = () => {
     const [campaignData, updateCampaignData] = useState([{ id: "default", campaignId: "", status: "", name: "", objective: "" }]);
 
+    const fetchCampaign = async () => {
+        const accessToken = localStorage.getItem("access_token")
+
+        const { adAccountId, getAdAccountIdError } = await api.getAdAccountId(accessToken)
+
+        if (getAdAccountIdError) {
+            console.log(JSON.stringify(getAdAccountIdError))
+            return;
+        }
+
+        const { data, getAllCampaignsError } = await api.getAllCampaigns(adAccountId, accessToken!);
+
+        if (getAllCampaignsError) {
+            console.log(getAllCampaignsError)
+            return;
+        }
+        updateCampaignData(data)
+    }
+
     useEffect(() => {
         const queryData = async () => {
             await delay(1000)
-            const { data, getAllCampaignsError } = await api.getAllCampaigns();
-
-            if (getAllCampaignsError) {
-                console.log(getAllCampaignsError)
-                return;
-            }
-            updateCampaignData(data)
+            fetchCampaign();
         }
 
         queryData();
@@ -52,7 +65,7 @@ const Campaign = () => {
                         {campaignData.map((item, index) => (
                             <TableRow key={item.id}>
                                 <TableCell><SwitchComponent checked={item.status == "ACTIVE"} onChange={() => { }} /></TableCell>
-                                <TableCell><Link href={`/userdashboard/adsets/${item.campaignId}`} className='underline text-blue-600'>{item.campaignId}</Link></TableCell>
+                                <TableCell><Link href={`/userdashboard/adsets/${item.id}`} className='underline text-blue-600'>{item.id}</Link></TableCell>
                                 <TableCell>{item.name}</TableCell>
                                 <TableCell>{item.objective}</TableCell>
                                 <TableCell>
@@ -72,6 +85,7 @@ const Campaign = () => {
                         </svg>
                     </div>
                     <p>Fetching Campaigns</p>
+                    <button onClick={fetchCampaign}>Try fetching again</button>
                 </div>
             }
         </>

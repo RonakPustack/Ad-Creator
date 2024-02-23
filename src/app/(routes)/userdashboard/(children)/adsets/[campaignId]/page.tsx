@@ -16,7 +16,17 @@ const Adsets = () => {
 
     useEffect(() => {
         const queryData = async () => {
-            const { data, getAdsetsError } = await api.getAdsets(campaignId);
+
+            const accessToken = localStorage.getItem("access_token")
+
+            const { adAccountId, getAdAccountIdError } = await api.getAdAccountId(accessToken)
+
+            if (getAdAccountIdError) {
+                console.log(JSON.stringify(getAdAccountIdError))
+                return;
+            }
+
+            const { data, getAdsetsError } = await api.getAdsets(campaignId, adAccountId, accessToken!);
 
             if (getAdsetsError) {
                 console.log(getAdsetsError)
@@ -44,7 +54,7 @@ const Adsets = () => {
                     {adsetData.map((item, index) => (
                         <TableRow key={item.id}>
                             <TableCell><SwitchComponent checked={item.status == "ACTIVE"} onChange={() => { }} /></TableCell>
-                            <TableCell><Link href={`/userdashboard/ads/${item.campaignId}/${item.adSetId}`} className='underline text-blue-600'>{item.adSetId}</Link></TableCell>
+                            <TableCell><Link href={`/userdashboard/ads/${item.campaignId}/${item.id}`} className='underline text-blue-600'>{item.id}</Link></TableCell>
                             <TableCell>{item.name}</TableCell>
                             <TableCell>{item.bidStrategy}</TableCell>
                             <TableCell>{item.campaignId}</TableCell>
