@@ -85,7 +85,7 @@ const Campaign = () => {
                         </svg>
                     </div>
                     <p>Fetching Campaigns</p>
-                    <button onClick={fetchCampaign}>Try fetching again</button>
+                    {/* <button onClick={fetchCampaign}>Try fetching again</button> */}
                 </div>
             }
         </>
