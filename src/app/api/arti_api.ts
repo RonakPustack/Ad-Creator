@@ -1,5 +1,5 @@
 import axios from "axios";
-import { adCreative } from "./services";
+import { adCreative, countryAPI } from "./services";
 
 const isLocal = true
 
@@ -18,6 +18,7 @@ const liveApiConfig = {
 const apiConfig = isLocal ? localApiConfig : liveApiConfig;
 
 const getAllAdCreatives = async () => await adCreative.getAllAdCreatives(apiConfig);
+const getAllCountries = async () => await countryAPI.getAllCountries(apiConfig);
 
 const getAllCampaigns = async (accountId: string, accessToken: string) => {
     try {
@@ -116,7 +117,7 @@ const createCampaign = async (campaign: any, accountId: string, accessToken: str
     }
 }
 
-const createAdSet = async (adSet: any, accountId: any, accessToken: any) => {
+const createAdSet = async (adSet: any, accountId: any, accessToken: any, country: any) => {
     try {
         const url = `${apiConfig.protocol}://${apiConfig.baseUrl}/v1/${apiConfig.routeName}/adsets`;
 
@@ -134,7 +135,7 @@ const createAdSet = async (adSet: any, accountId: any, accessToken: any) => {
             ],
             "geo_locations": {
                 "countries": [
-                    "IN"
+                    country
                 ]
             },
             "publisher_platforms": [
@@ -164,7 +165,7 @@ const createAdSet = async (adSet: any, accountId: any, accessToken: any) => {
 const uploadImage = async (imageBytes: any, accountId: any, accessToken: any) => {
     try {
 
-        const url = `https://graph.facebook.com/v19.0/act_${accountId}/adimages`
+        const url = `https://graph.facebook.com/v19.0/${accountId}/adimages`
 
         const response = await axios.post(url, {
             bytes: imageBytes,
@@ -182,7 +183,7 @@ const uploadImage = async (imageBytes: any, accountId: any, accessToken: any) =>
 
 const createAdCreative = async (adCreative: any, imageHash: any, accountId: any, accessToken: any) => {
     try {
-        const url = `https://graph.facebook.com/v19.0/act_${accountId}/adcreatives`
+        const url = `https://graph.facebook.com/v19.0/${accountId}/adcreatives`
 
         const response = await axios.post(url, {
             "name": adCreative.name,
@@ -292,6 +293,7 @@ const combinedExports = {
     createAd,
     sendMarketingEmail,
     getAllAdCreatives,
+    getAllCountries,
 };
 
 export default combinedExports;

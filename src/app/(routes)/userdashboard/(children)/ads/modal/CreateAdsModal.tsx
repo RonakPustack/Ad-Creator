@@ -18,6 +18,7 @@ const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken
     const [name, updateName] = useState("");
     const [status, updateStatus] = useState("ACTIVE")
     const [isLoading, setLoadingState] = useState(false)
+    const [loadingText, setLoadingText] = useState('')
     const [callToActionType, setCallToActionType] = useState("")
     const [imageUrl, setImageUrl] = useState('');
     const [base64String, setBase64String] = useState('');
@@ -127,16 +128,21 @@ const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken
     ]
 
     const convertImageToBase64 = async (imageUrl: string) => {
-
+        setLoadingState(true)
+        setLoadingText('Querying Image...')
+        const imageList = imageUrl.split("/");
         try {
-            const response = await fetch(imageUrl);
+            console.log('fetching image');
+            const response = await fetch(`https://api.artiai.org/v1/utils/image/${imageList[imageList.length - 1]}`);
             const blob = await response.blob();
 
-            console.log(blob)
+            setLoadingText('Processing Image...')
 
             const reader = new FileReader();
             reader.onload = (e: any) => {
-                console.log(reader.result);
+                setBase64String(reader.result?.toString().split(",")[1]!);
+                setLoadingText('')
+                setLoadingState(false)
             };
             reader.readAsDataURL(blob);
         } catch (error) {
@@ -183,6 +189,7 @@ const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken
 
     const handleSubmit = async () => {
         setLoadingState(true)
+        setLoadingText('Creating...')
 
         try {
             const { adAccountId, getAdAccountIdError } = await api.getAdAccountId(accessToken)
@@ -191,7 +198,6 @@ const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken
                 setErrorMessage(getAdAccountIdError.response.data.error.message)
                 return;
             }
-
 
             const { imageHash, uploadImageError } = await api.uploadImage(base64String, adAccountId, accessToken);
 
@@ -290,7 +296,7 @@ const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken
                     </div>
                 </div>
                 {errorMessage ? <p className='mt-4 text-red-700 align-middle text-sm'>{errorMessage}</p> : <></>}
-                <ActionButton isLoading={isLoading} normalText="Create Ad" loadingText="Creating..." handleSubmit={handleSubmit} />
+                <ActionButton isLoading={isLoading} normalText="Create Ad" loadingText={loadingText} handleSubmit={handleSubmit} />
             </div>
         </Dialog>
     );

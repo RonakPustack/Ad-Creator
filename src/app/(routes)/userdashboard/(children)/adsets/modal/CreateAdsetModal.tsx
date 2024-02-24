@@ -1,5 +1,5 @@
 import SwitchComponent from '@/app/components/helper/SwitchComponent';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ActionButton from '../../../components/ActionButton';
 import Dialog from '../../../components/Dialog';
 import api from "../../../../../api/arti_api";
@@ -21,6 +21,24 @@ const CreateAdsetModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessTok
     const [dailyBudget, updateDailyBudget] = useState(0)
     const [isLoading, setLoadingState] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
+    const [country, updateCountry] = useState("")
+
+    const [countriesMap, updateCountries] = useState()
+
+    useEffect(() => {
+        const queryData = async () => {
+            console.log('query data')
+            const response = await api.getAllCountries()
+            if (response.data) {
+                console.log(response.data)
+                updateCountries(response.data);
+            }
+
+        }
+
+        queryData();
+    }, []);
+
 
     const handleNameUpdate = (e: any) => {
         updateName(e.target.value);
@@ -37,7 +55,9 @@ const CreateAdsetModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessTok
     const handleOptimizationGoalChange = (e: any) => {
         updateOptimizationGoal(e.target.value);
     }
-
+    const handleCountryChange = (e: any) => {
+        updateCountry(e.target.value);
+    }
     const handleSwitchChange = (e: any) => {
         updateStatus(e ? "ACTIVE" : "PAUSED")
     }
@@ -74,7 +94,7 @@ const CreateAdsetModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessTok
                 status: status,
             }
 
-            const { adSetId, createAdSetError } = await api.createAdSet(adSet, adAccountId, accessToken);
+            const { adSetId, createAdSetError } = await api.createAdSet(adSet, adAccountId, accessToken, country);
 
             if (createAdSetError) {
                 console.log(JSON.stringify(createAdSetError))
@@ -130,6 +150,15 @@ const CreateAdsetModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessTok
                         ))}
                     </select>
                 </div>
+                {countriesMap ? <div className="border-slate-500 border placeholder-slate-400 p-2 text-black rounded-lg mt-2">
+                    <label htmlFor="dropdown">Select Country:</label>
+                    <select id="dropdown" name="dropdown" onChange={handleCountryChange} className="border-0 outline-0">
+                        {Object.keys(countriesMap).map((item, index) => (
+                            <option key={index} value={item}>{countriesMap[item]["country"]}</option>
+                        ))}
+                    </select>
+                </div> : <></>}
+
                 <div />
 
                 <div className="border-slate-500 placeholder-slate-400 p-2 text-black mt-2 flex space-x-4">
