@@ -1,6 +1,7 @@
 import axios from "axios";
+import { adCreative } from "./services";
 
-const isLocal = false
+const isLocal = true
 
 const localApiConfig = {
     baseUrl: "localhost:8081",
@@ -15,6 +16,8 @@ const liveApiConfig = {
 }
 
 const apiConfig = isLocal ? localApiConfig : liveApiConfig;
+
+const getAllAdCreatives = async () => await adCreative.getAllAdCreatives(apiConfig);
 
 const getAllCampaigns = async (accountId: string, accessToken: string) => {
     try {
@@ -96,7 +99,7 @@ const createCampaign = async (campaign: any, accountId: string, accessToken: str
 
         const campaignObject = {
             campaign: campaign,
-            ad_account_id: accountId,
+            account_id: accountId,
             access_token: accessToken
         };
 
@@ -145,7 +148,7 @@ const createAdSet = async (adSet: any, accountId: any, accessToken: any) => {
 
         const response = await axios.post(url, {
             adSet: adSet,
-            ad_account_id: accountId,
+            account_id: accountId,
             access_token: accessToken,
         });
 
@@ -288,6 +291,7 @@ const combinedExports = {
     createAdCreative,
     createAd,
     sendMarketingEmail,
+    getAllAdCreatives,
 };
 
 export default combinedExports;

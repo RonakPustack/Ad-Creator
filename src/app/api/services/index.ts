@@ -1,0 +1,1 @@
+export { default as adCreative } from "./adCreative.service";

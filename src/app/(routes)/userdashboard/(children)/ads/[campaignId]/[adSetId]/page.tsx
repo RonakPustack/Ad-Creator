@@ -22,7 +22,6 @@ const Ads = () => {
 
     useEffect(() => {
         const queryData = async () => {
-
             const accessToken = localStorage.getItem("access_token")
 
             const { adAccountId, getAdAccountIdError } = await api.getAdAccountId(accessToken)

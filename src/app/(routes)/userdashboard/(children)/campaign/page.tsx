@@ -43,7 +43,9 @@ const Campaign = () => {
     useEffect(() => {
         const queryData = async () => {
             await delay(1000)
-            fetchCampaign();
+            if (typeof window !== 'undefined') {
+                fetchCampaign();
+            }
         }
 
         queryData();

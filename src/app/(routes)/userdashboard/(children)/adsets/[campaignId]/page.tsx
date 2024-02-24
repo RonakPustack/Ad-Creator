@@ -12,7 +12,7 @@ const Adsets = () => {
     const params = useParams();
     const campaignId = params.campaignId
 
-    const [adsetData, updateAdsetData] = useState([{ id: "default", adSetId: "", status: "", name: "", bidStrategy: "", campaignId: "", optimizationGoal: "" }]);
+    const [adsetData, updateAdsetData] = useState([{ id: "default", adSetId: "", status: "", name: "", bidStrategy: "", campaign_id: "", optimizationGoal: "" }]);
 
     useEffect(() => {
         const queryData = async () => {
@@ -54,10 +54,10 @@ const Adsets = () => {
                     {adsetData.map((item, index) => (
                         <TableRow key={item.id}>
                             <TableCell><SwitchComponent checked={item.status == "ACTIVE"} onChange={() => { }} /></TableCell>
-                            <TableCell><Link href={`/userdashboard/ads/${item.campaignId}/${item.id}`} className='underline text-blue-600'>{item.id}</Link></TableCell>
+                            <TableCell><Link href={`/userdashboard/ads/${item.campaign_id}/${item.id}`} className='underline text-blue-600'>{item.id}</Link></TableCell>
                             <TableCell>{item.name}</TableCell>
                             <TableCell>{item.bidStrategy}</TableCell>
-                            <TableCell>{item.campaignId}</TableCell>
+                            <TableCell>{item.campaign_id}</TableCell>
                             <TableCell>
                                 <div className="flex">
                                     <div className="p-1 bg-red-200 rounded-md"><MdDelete /></div>

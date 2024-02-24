@@ -1,8 +1,10 @@
 import SwitchComponent from '@/app/components/helper/SwitchComponent';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ActionButton from '../../../components/ActionButton';
 import Dialog from '../../../components/Dialog';
 import api from "../../../../../api/arti_api";
+import SelectAdCreativeModal from './SelectAdCreativeModal';
+import { AdCreative, Variant } from '@/app/models';
 
 interface DialogBoxProps {
     isOpen: boolean;
@@ -21,6 +23,11 @@ const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken
     const [base64String, setBase64String] = useState('');
     const [adTitle, setAdTitle] = useState('');
     const [errorMessage, setErrorMessage] = useState("")
+
+    const [selectedVariant, updateVariant] = useState<Variant>();
+
+    const [adCreativeData, setAdCreative] = useState([])
+    const [isAdCreativeModalOpen, setIsAdCreativeModalOpen] = useState(false);
 
     const callToActionList = [
         { "name": "Book Travel", "value": "BOOK_TRAVEL" },
@@ -119,14 +126,33 @@ const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken
         { "name": "Start Order", "value": "START_ORDER" }
     ]
 
+    const convertImageToBase64 = async (imageUrl: string) => {
+
+        try {
+            const response = await fetch(imageUrl);
+            const blob = await response.blob();
+
+            console.log(blob)
+
+            const reader = new FileReader();
+            reader.onload = (e: any) => {
+                console.log(reader.result);
+            };
+            reader.readAsDataURL(blob);
+        } catch (error) {
+            console.error('Error converting image URL to Base64:', error);
+            return null;
+        }
+    }
+
     const onImageSelect = (event: any) => {
         const file = event.target.files[0];
         const reader = new FileReader();
 
         reader.onload = (e: any) => {
-            const imageUrl = e.target.result
-            setImageUrl(imageUrl);
-            setBase64String(imageUrl.split(",")[1]);
+            const data = e.target.result
+            setImageUrl(data);
+            setBase64String(data.split(",")[1]);
         };
 
         reader.readAsDataURL(file);
@@ -149,6 +175,11 @@ const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken
         setAdTitle(e.target.value)
     }
 
+    const handleVariantChange = (variant: Variant) => {
+        updateVariant(variant)
+        setAdTitle(variant.oneLiner)
+        convertImageToBase64(variant.imageUrl!);
+    }
 
     const handleSubmit = async () => {
         setLoadingState(true)
@@ -200,6 +231,13 @@ const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken
         }
     }
 
+    const closeAdCreativeModal = () => {
+        setIsAdCreativeModalOpen(false);
+    };
+    const openAdCreativeModal = () => {
+        setIsAdCreativeModalOpen(true);
+    };
+
 
     return (
         <Dialog
@@ -209,9 +247,9 @@ const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken
             <div className="flex flex-col p-6 rounded-lg bg-white mb-4 text-black">
                 <p className="text-black font-bold text-2xl mb-6">Create Ad</p>
                 <input className="border-slate-500 border placeholder-slate-400 contrast-more:border-slate-400 contrast-more:placeholder-slate-500 p-2 text-black rounded-lg mb-2" placeholder="Ad Name" onChange={handleNameUpdate} />
-                <input className="border-slate-500 border placeholder-slate-400 contrast-more:border-slate-400 contrast-more:placeholder-slate-500 p-2 text-black rounded-lg mb-2" placeholder="Ad Title" onChange={handleTitleUpdate} />
+                <input className="border-slate-500 border placeholder-slate-400 contrast-more:border-slate-400 contrast-more:placeholder-slate-500 p-2 text-black rounded-lg mb-2" placeholder="Ad Title" onChange={handleTitleUpdate} value={adTitle} />
 
-                <div className="border-slate-500 border placeholder-slate-400 p-2 text-black rounded-lg mt-0 mb-8">
+                <div className="border-slate-500 border placeholder-slate-400 p-2 text-black rounded-lg mt-0 mb-4">
                     <label htmlFor="dropdown">Call to action:</label>
                     <select id="dropdown" name="dropdown" onChange={handleCallToActionChange} className="border-0 outline-0">
                         {callToActionList.map((item, index) => (
@@ -220,7 +258,18 @@ const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken
                     </select>
                 </div>
 
-                <input type="file" className="block w-full text-sm text-slate-500
+                <div className='flex bg-gray-200 rounded-md p-5 justify-center' onClick={openAdCreativeModal}>
+                    <p className='font-bold text-gray-700'>Select AdCreative</p>
+                </div>
+                <SelectAdCreativeModal isOpen={isAdCreativeModalOpen} onClose={closeAdCreativeModal} onVariantSelect={handleVariantChange} />
+                {
+                    selectedVariant ? <>
+                        <div className='flex py-4 flex-col items-center'>
+                            <img src={selectedVariant.imageUrl!} height='200px' width='200px' className='rounded-md mr-4' />
+                        </div>
+                    </> : <></>
+                }
+                {/* <input type="file" className="block w-full text-sm text-slate-500
       file:mr-4 file:py-2 file:px-4
       file:rounded-full file:border-0
       file:text-sm file:font-semibold
@@ -231,7 +280,7 @@ const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken
                     <div className='mt-5'>
                         {imageUrl && <img src={imageUrl} className='rounded-lg' alt="Uploaded" style={{ maxWidth: '40%' }} />}
                     </div>
-                </center>
+                </center> */}
 
                 <div className="border-slate-500 placeholder-slate-400 p-2 text-black mt-2 flex space-x-4">
                     <label>Status:</label>
