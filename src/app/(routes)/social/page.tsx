@@ -55,7 +55,7 @@ const LeftPanel = () => {
         <div className="bg-slate-100 h-full p-5 ml-2">
             <p className="text-xl font-bold mb-4">My Pages</p>
             {pagesData.map((item, index) => {
-                return <button>
+                return <button key={item.id}>
                     <div className="flex rounded-md bg-slate-300 p-2  pr-8">
                         <div className="rounded-md py-2 px-4 bg-slate-500 font-bold text-2xl text-white mr-4" >{item.name[0]}</div>
                         <div className="flex flex-col items-start">
@@ -95,7 +95,7 @@ const AdCreativeView = ({ onVariantSelect }: { onVariantSelect: (variant: Varian
             </div>
             {adCreativeData ? <div>
                 {adCreativeData.map((adCreative, index) => {
-                    return <div className='flex flex-col py-4 border-gray-400 border-b items-center'>
+                    return <div key={adCreative.id} className='flex flex-col py-4 border-gray-400 border-b items-center'>
                         <div className='flex justify-between w-full'>
                             <div>
                                 <span className='font-semibold'>Objective: </span><span className=''>{adCreative.adObjective}</span>
