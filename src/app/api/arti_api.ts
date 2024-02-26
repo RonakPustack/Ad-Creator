@@ -1,7 +1,7 @@
 import axios from "axios";
 import { adCreative, countryAPI, social } from "./services";
 
-const isLocal = true
+const isLocal = false
 
 const localApiConfig = {
     baseUrl: "localhost:8081",
