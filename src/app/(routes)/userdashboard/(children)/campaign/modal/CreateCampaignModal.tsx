@@ -1,5 +1,5 @@
 import SwitchComponent from '@/app/components/helper/SwitchComponent';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ActionButton from '../../../components/ActionButton';
 import Dialog from '../../../components/Dialog';
 import api from "../../../../../api/arti_api";
@@ -10,6 +10,9 @@ interface DialogBoxProps {
     onClose: () => void;
     accessToken: string;
 }
+const delay = (delay: number) => new Promise((res) => {
+    setTimeout(res, delay)
+})
 
 const CreateCampaignModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken }) => {
     const [name, updateName] = useState("");
@@ -17,7 +20,6 @@ const CreateCampaignModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, access
     const [status, updateStatus] = useState("ACTIVE")
     const [isLoading, setLoadingState] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
-
 
     const handleNameUpdate = (e: any) => {
         updateName(e.target.value)
@@ -39,8 +41,7 @@ const CreateCampaignModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, access
             const { adAccountId, getAdAccountIdError } = await api.getAdAccountId(accessToken)
 
             if (getAdAccountIdError) {
-                console.log(JSON.stringify(getAdAccountIdError))
-                setErrorMessage(getAdAccountIdError.response.data.error.message)
+                setErrorMessage(getAdAccountIdError)
                 return;
             }
 
@@ -50,15 +51,14 @@ const CreateCampaignModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, access
                 status: status,
             }
 
-            const { campaignId, createCampaignError } = await api.createCampaign(campaign, adAccountId!, accessToken);
-            if (createCampaignError) {
-                console.log(JSON.stringify(createCampaignError))
-                setErrorMessage(createCampaignError.response.data.error.message)
-                return;
-            }
+            const { createCampaignError } = await api.createCampaign(campaign, adAccountId!, accessToken);
 
-            onClose();
-        } catch (e) { } finally {
+            if (createCampaignError) {
+                setErrorMessage(createCampaignError)
+            } else {
+                onClose();
+            }
+        } finally {
             setLoadingState(false)
         }
     }

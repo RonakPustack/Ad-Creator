@@ -12,8 +12,8 @@ import {
 import SwitchComponent from '@/app/components/helper/SwitchComponent';
 import Link from "next/link";
 import { useEffect, useState } from "react";
-// import api from "../../../../api/arti_api";
-import api from "../../../../api/meta_marketing_api";
+import api from "../../../../api/arti_api";
+// import api from "../../../../api/meta_marketing_api";
 
 const delay = (delay: number) => new Promise((res) => {
     setTimeout(res, delay)
@@ -21,6 +21,7 @@ const delay = (delay: number) => new Promise((res) => {
 
 const Campaign = () => {
     const [campaignData, updateCampaignData] = useState([{ id: "default", campaignId: "", status: "", name: "", objective: "" }]);
+    const [errorMessage, setErrorMessage] = useState("")
 
     const fetchCampaign = async () => {
         const accessToken = localStorage.getItem("access_token")
@@ -28,14 +29,14 @@ const Campaign = () => {
         const { adAccountId, getAdAccountIdError } = await api.getAdAccountId(accessToken)
 
         if (getAdAccountIdError) {
-            console.log(JSON.stringify(getAdAccountIdError))
+            setErrorMessage(getAdAccountIdError);
             return;
         }
 
         const { data, getAllCampaignsError } = await api.getAllCampaigns(adAccountId, accessToken!);
 
         if (getAllCampaignsError) {
-            console.log(getAllCampaignsError)
+            setErrorMessage(getAllCampaignsError);
             return;
         }
         updateCampaignData(data)
@@ -80,7 +81,7 @@ const Campaign = () => {
                         ))}
                     </TableBody>
                 </Table>
-                : campaignData.length == 0 ? <p>No Campaign Found</p> : <div className="flex justify-center">
+                : campaignData.length == 0 ? <p>No Campaign Found</p> : errorMessage ? <p className="mt-4 text-red-700 align-middle text-sm">{errorMessage}</p> : <div className="flex justify-center">
                     <div role="status">
                         <svg aria-hidden="true" className="mr-2 inline w-6 h-6 text-gray-200 animate-spin dark:text-gray-600 fill-white" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />

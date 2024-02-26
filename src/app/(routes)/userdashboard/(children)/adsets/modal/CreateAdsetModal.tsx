@@ -79,8 +79,7 @@ const CreateAdsetModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessTok
         try {
             const { adAccountId, getAdAccountIdError } = await api.getAdAccountId(accessToken)
             if (getAdAccountIdError) {
-                console.log(JSON.stringify(getAdAccountIdError))
-                setErrorMessage(getAdAccountIdError.response.data.error.message)
+                setErrorMessage(getAdAccountIdError)
                 return;
             }
 
@@ -96,14 +95,16 @@ const CreateAdsetModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessTok
 
             const { adSetId, createAdSetError } = await api.createAdSet(adSet, adAccountId, accessToken, country);
 
+            console.log(createAdSetError)
+
             if (createAdSetError) {
-                console.log(JSON.stringify(createAdSetError))
-                setErrorMessage(createAdSetError.message)
+                setErrorMessage(createAdSetError)
                 return;
+            } else {
+                onClose();
             }
-            setLoadingState(false)
-            onClose();
-        } catch (e) { } finally {
+
+        } finally {
             setLoadingState(false)
         }
     }

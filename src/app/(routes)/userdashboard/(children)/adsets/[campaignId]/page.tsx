@@ -13,6 +13,7 @@ const Adsets = () => {
     const campaignId = params.campaignId
 
     const [adsetData, updateAdsetData] = useState([{ id: "default", adSetId: "", status: "", name: "", bidStrategy: "", campaign_id: "", optimizationGoal: "" }]);
+    const [errorMessage, setErrorMessage] = useState("")
 
     useEffect(() => {
         const queryData = async () => {
@@ -22,14 +23,14 @@ const Adsets = () => {
             const { adAccountId, getAdAccountIdError } = await api.getAdAccountId(accessToken)
 
             if (getAdAccountIdError) {
-                console.log(JSON.stringify(getAdAccountIdError))
+                setErrorMessage(getAdAccountIdError);
                 return;
             }
 
             const { data, getAdsetsError } = await api.getAdsets(campaignId, adAccountId, accessToken!);
 
             if (getAdsetsError) {
-                console.log(getAdsetsError)
+                setErrorMessage(getAdsetsError);
                 return;
             }
 
@@ -66,7 +67,7 @@ const Adsets = () => {
                         </TableRow>
                     ))}
                 </TableBody>
-            </Table> : adsetData.length === 0 ? <p>No Adset Found</p> : <div className="flex justify-center">
+            </Table> : adsetData.length === 0 ? <p>No Adset Found</p> : errorMessage ? <p className="mt-4 text-red-700 align-middle text-sm">{errorMessage}</p> : <div className="flex justify-center">
                 <div role="status">
                     <svg aria-hidden="true" className="mr-2 inline w-6 h-6 text-gray-200 animate-spin dark:text-gray-600 fill-white" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />

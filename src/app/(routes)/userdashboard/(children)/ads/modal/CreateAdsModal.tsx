@@ -132,7 +132,6 @@ const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken
         setLoadingText('Querying Image...')
         const imageList = imageUrl.split("/");
         try {
-            console.log('fetching image');
             const response = await fetch(`https://api.artiai.org/v1/utils/image/${imageList[imageList.length - 1]}`);
             const blob = await response.blob();
 
@@ -194,13 +193,19 @@ const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken
         try {
             const { adAccountId, getAdAccountIdError } = await api.getAdAccountId(accessToken)
             if (getAdAccountIdError) {
-                console.log(JSON.stringify(getAdAccountIdError));
-                setErrorMessage(getAdAccountIdError.response.data.error.message)
+                setErrorMessage(getAdAccountIdError)
                 return;
             }
 
-            const { imageHash, uploadImageError } = await api.uploadImage(base64String, adAccountId, accessToken);
 
+            // setLoadingText('Uploading Image...')
+
+            // const { imageHash, uploadImageError } = await api.uploadImage(base64String, adAccountId, accessToken);
+
+            // if (uploadImageError) {
+            //     setErrorMessage(uploadImageError)
+            //     return;
+            // }
 
             const adCreative = {
                 name: name,
@@ -208,14 +213,16 @@ const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken
                 message: adTitle,
             }
 
-            const { creativeId, createAdCreativeError } = await api.createAdCreative(adCreative, imageHash, adAccountId, accessToken);
+            setLoadingText('Building Ad Creative...')
+
+            const { creativeId, createAdCreativeError } = await api.createAdCreative(adCreative, "23c9aa6518271a937df6c144bbe584d7", adAccountId, accessToken);
 
             if (createAdCreativeError) {
-                console.log(JSON.stringify(createAdCreativeError));
-                setErrorMessage(createAdCreativeError.response.data.error.message)
+                setErrorMessage(createAdCreativeError)
                 return;
             }
 
+            setLoadingText('Finalizing your ad...')
 
             const ad = {
                 name: name,
@@ -226,13 +233,12 @@ const CreateAdsModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, accessToken
             }
             const { adId, createAdError } = await api.createAd(ad, adAccountId, accessToken);
             if (createAdError) {
-                console.log(JSON.stringify(createAdError));
-                setErrorMessage(createAdError.data.error.message)
+                setErrorMessage(createAdError)
                 return;
+            } else {
+                onClose();
             }
-            setLoadingState(false)
-            onClose();
-        } catch (e) { } finally {
+        } finally {
             setLoadingState(false)
         }
     }

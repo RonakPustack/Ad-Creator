@@ -1,7 +1,7 @@
 import axios from "axios";
 import { adCreative, countryAPI } from "./services";
 
-const isLocal = false
+const isLocal = true
 
 const localApiConfig = {
     baseUrl: "localhost:8081",
@@ -96,24 +96,20 @@ const createCampaign = async (campaign: any, accountId: string, accessToken: str
     try {
         const url = `${apiConfig.protocol}://${apiConfig.baseUrl}/v1/${apiConfig.routeName}/campaigns`;
 
-        console.log(url)
-
         const campaignObject = {
             campaign: campaign,
             account_id: accountId,
             access_token: accessToken
         };
 
-        console.log(campaignObject)
-
         const response = await axios.post(url, campaignObject);
 
         if (response.status == 200) {
-            return { campaignId: response.data["id"] }
+            return { campaignId: response.data }
         }
-        return { createCampaignError: "Error" }
+        return { createCampaignError: "An unknown error occurred" }
     } catch (e: any) {
-        return { createCampaignError: e.response.headers }
+        return { createCampaignError: e.response.data.message }
     }
 }
 
@@ -135,7 +131,7 @@ const createAdSet = async (adSet: any, accountId: any, accessToken: any, country
             ],
             "geo_locations": {
                 "countries": [
-                    country
+                    country,
                 ]
             },
             "publisher_platforms": [
@@ -154,16 +150,20 @@ const createAdSet = async (adSet: any, accountId: any, accessToken: any, country
         });
 
         if (response.status == 200) {
-            return { adSetId: response.data["id"] }
+            return { adSetId: response.data }
         }
-        return { createAdSetError: "Error" }
+        return { createAdSetError: 'An unknown error occurred!' }
     } catch (e: any) {
-        return { createAdSetError: e }
+        console.log(e.response)
+        return { createAdSetError: e.response.data.message }
     }
 }
 
 const uploadImage = async (imageBytes: any, accountId: any, accessToken: any) => {
     try {
+        if (!imageBytes) {
+            return { uploadImageError: `Please select an image.` }
+        }
 
         const url = `https://graph.facebook.com/v19.0/${accountId}/adimages`
 
@@ -177,7 +177,8 @@ const uploadImage = async (imageBytes: any, accountId: any, accessToken: any) =>
         }
         return { imageHash: `uploadImageError in API: ${response}` }
     } catch (e: any) {
-        return { uploadImageError: `uploadImageError: ${e}` }
+        console.log(e.response.data)
+        return { uploadImageError: "e.response" }
     }
 }
 
@@ -213,9 +214,18 @@ const createAdCreative = async (adCreative: any, imageHash: any, accountId: any,
         if (response.status == 200) {
             return { creativeId: response.data["id"] }
         }
-        return { createAdCreativeError: response }
+        return { createAdCreativeError: 'An unknown error occurred!' }
     } catch (e: any) {
-        return { createAdCreativeError: e.response.headers }
+        if (e.response) {
+            if (e.response.data.error.error_user_msg) {
+                return { createAdCreativeError: e.response.data.error.error_user_msg }
+            } else if (e.response.data.error.message) {
+                const msg = e.response.data.error.message
+                const list = msg.split(":")
+                return { createAdCreativeError: list[list.length - 1] }
+            }
+        }
+        return { createAdCreativeError: "An unknown error occurred!" }
     }
 }
 
@@ -229,17 +239,14 @@ const createAd = async (ad: any, accountId: any, accessToken: any) => {
             access_token: accessToken
         }
 
-        console.log(url)
-        console.log(JSON.stringify(reqBody))
-
         const response = await axios.post(url, reqBody);
 
         if (response.status == 200) {
-            return { adId: response.data["id"] }
+            return { adId: response.data }
         }
-        return { createAdError: response }
+        return { createAdError: 'An unknown error occurred!' }
     } catch (e: any) {
-        return { catchAdError: e.response.headers }
+        return { createAdError: e.response.data.message }
     }
 }
 
@@ -262,21 +269,19 @@ const sendMarketingEmail = async () => {
 
 const getAdAccountId = async (accessToken: any) => {
     try {
-        const url = `https://graph.facebook.com/v19.0/me/adaccounts`
+        console.log('triggered getAdAccountId')
+        const url = `${apiConfig.protocol}://${apiConfig.baseUrl}/v1/${apiConfig.routeName}/get_ad_account_id`;
 
-        const response = await axios.get(url, {
-            params: {
-                access_token: accessToken,
-            }
-        });
+        const response = await axios.post(url, {
+            access_token: accessToken
+        },);
 
         if (response.status == 200) {
-            return { adAccountId: response.data.data[0].id }
+            return { adAccountId: response.data.data }
         }
-
-        return { getAdAccountIdError: "Error occurred" }
+        return { getAdAccountIdError: "An unknown error occurred" }
     } catch (e: any) {
-        return { getAdAccountIdError: e }
+        return { getAdAccountIdError: e.response.data.message }
     }
 }
 
