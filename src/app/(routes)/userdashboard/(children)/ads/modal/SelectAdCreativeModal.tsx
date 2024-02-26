@@ -24,7 +24,7 @@ const SelectAdCreativeModal: React.FC<DialogBoxProps> = ({ isOpen, onClose, onVa
                 return;
             }
 
-            setAdCreative(data.splice(0, 10))
+            setAdCreative(data.splice(0, 1))
         }
 
         queryData();

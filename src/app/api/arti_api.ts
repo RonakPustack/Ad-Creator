@@ -1,5 +1,5 @@
 import axios from "axios";
-import { adCreative, countryAPI } from "./services";
+import { adCreative, countryAPI, social } from "./services";
 
 const isLocal = true
 
@@ -19,6 +19,9 @@ const apiConfig = isLocal ? localApiConfig : liveApiConfig;
 
 const getAllAdCreatives = async () => await adCreative.getAllAdCreatives(apiConfig);
 const getAllCountries = async () => await countryAPI.getAllCountries(apiConfig);
+
+const getAllPages = async (accessToken: string) => await social.getAllPages(apiConfig, accessToken);
+const createPost = async (pageId: string, pageAccessToken: string, post: any) => await social.createPost(apiConfig, pageId, pageAccessToken, post);
 
 const getAllCampaigns = async (accountId: string, accessToken: string) => {
     try {
@@ -299,6 +302,8 @@ const combinedExports = {
     sendMarketingEmail,
     getAllAdCreatives,
     getAllCountries,
+    createPost,
+    getAllPages,
 };
 
 export default combinedExports;
