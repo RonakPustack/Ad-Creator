@@ -31,7 +31,6 @@ const Dialog: React.FC<DialogBoxProps> = ({ isOpen, onClose, children }) => {
             style={customStyles}
         >
             {children}
-            <button onClick={onClose}>Close</button>
         </Modal>
     );
 };
