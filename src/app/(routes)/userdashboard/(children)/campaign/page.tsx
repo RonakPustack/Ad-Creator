@@ -12,7 +12,8 @@ import {
 import SwitchComponent from '@/app/components/helper/SwitchComponent';
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import api from "../../../../api/arti_api";
+// import api from "../../../../api/arti_api";
+import api from "../../../../api/meta_marketing_api";
 
 const delay = (delay: number) => new Promise((res) => {
     setTimeout(res, delay)

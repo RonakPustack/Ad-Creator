@@ -1,7 +1,7 @@
 import axios from "axios";
 
 
-const getAllCampaigns = async (accessToken: string) => {
+const getAllCampaigns = async (adAccountId: string, accessToken: string) => {
     try {
 
         const { adAccountId, getAdAccountIdError } = await getAdAccountId(accessToken);
